@@ -2,7 +2,23 @@
 <resources>
 
     <string name="app_name">瞎聊</string>
+    <string name="description"></string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+	<string name="all_rights_reserved">Copyright © X-Chat. All Rights Reserved.</string>
+	<string name="setting_about_description">我们的沟通从指间开始</string>
+	
+	<string name="account">帐号</string>
+	<string name="password">密码</string>
+	<string name="login">登 录</string>
+	<string name="hint_account">请输入用户名</string>
+	<string name="hint_password">请输入密码</string>
+	<string name="setting_save_password">记住密码</string>
+	<string name="setting_hide_login">隐身登录</string>
+	<string name="setting_info_accounts">使用TLS加密</string>
+	<string name="setting_silence_login">静音模式</string>
+	
+	<string name="next">下一步</string>
+	
 </resources>
