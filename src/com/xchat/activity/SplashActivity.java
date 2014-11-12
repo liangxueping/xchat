@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
-import com.xchat.utils.PreferenceUtils;
+import com.xchat.utils.PreferenceUtil;
 
 public class SplashActivity extends FragmentActivity {
 	private Handler mHandler;
@@ -16,7 +16,7 @@ public class SplashActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		mHandler = new Handler();
-		String password = PreferenceUtils.getPrefString(PreferenceUtils.PASSWORD, "");
+		String password = PreferenceUtil.getPrefString(PreferenceUtil.PASSWORD, "");
 		if (!TextUtils.isEmpty(password)) {
 			mHandler.postDelayed(gotoMainAct, 1000);
 		} else {

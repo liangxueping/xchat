@@ -4,4 +4,15 @@
         <item name="android:textSize">15.0sp</item>
         <item name="android:textColor">#ff777777</item>
     </style>
+    
+    <style name="B4_Font">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">@color/skin_dark_gray</item>
+    </style>
+    
+    <style name="B7_Font">
+        <item name="android:textSize">19.0sp</item>
+        <item name="android:textColor">@color/skin_black</item>
+    </style>
+    
 </resources>

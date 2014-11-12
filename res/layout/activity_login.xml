@@ -143,7 +143,7 @@
             android:orientation="horizontal" >
 
             <CheckBox
-                android:id="@+id/auto_save_password"
+                android:id="@+id/cb_auto_save_password"
                 android:layout_width="wrap_content"
                 android:layout_height="40.0dip"
                 android:button="@drawable/checkbox_bg1"
@@ -157,7 +157,7 @@
                 android:layout_weight="1.0" />
 
             <CheckBox
-                android:id="@+id/hide_login"
+                android:id="@+id/cb_hide_login"
                 android:layout_width="wrap_content"
                 android:layout_height="40.0dip"
                 android:button="@drawable/checkbox_bg1"
@@ -175,11 +175,11 @@
             android:orientation="horizontal" >
 
             <CheckBox
-                android:id="@+id/use_tls"
+                android:id="@+id/cb_use_tls"
                 android:layout_width="wrap_content"
                 android:layout_height="40.0dip"
                 android:button="@drawable/checkbox_bg1"
-                android:text="@string/setting_info_accounts"
+                android:text="@string/setting_use_tls"
                 android:textColor="@color/black" />
 
             <View
@@ -188,7 +188,7 @@
                 android:layout_weight="1.0" />
 
             <CheckBox
-                android:id="@+id/silence_login"
+                android:id="@+id/cb_silence_login"
                 android:layout_width="wrap_content"
                 android:layout_height="40.0dip"
                 android:button="@drawable/checkbox_bg1"
@@ -202,11 +202,10 @@
             android:layout_height="0dip"
             android:layout_weight="1.0" />
     </LinearLayout>
-    <!--
+    
     <include
         android:id="@+id/login_help_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        layout="@layout/login_help"/>    -->
-
+        layout="@layout/login_help"/>
 </FrameLayout>

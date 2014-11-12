@@ -5,13 +5,55 @@ import android.preference.PreferenceActivity;
 
 import com.xchat.base.XChatApp;
 
-public class PreferenceUtils {
+public class PreferenceUtil {
 
 	//缓存文件名
 	public static final String PREF_FILE_NAME = "common_settings";
-
-	public static final String PASSWORD = "password";
 	
+	public static final String APP_VERSION= "app_version";
+
+	public static final String ACCOUNT = "account";
+	public static final String PASSWORD = "password";
+	/**
+	 * 使用TLS加密
+	 */
+	public static final String SETTING_USE_TLS = "use_tls";
+	/**
+	 * 隐身登陆
+	 */
+	public static final String SETTING_SILENCE_LOGIN = "silence_login";
+	/**
+	 * 登录状态
+	 */
+	public static final String SETTING_STATUS = "status_mode";
+	/**
+	 * 震动
+	 */
+	public final static String SETTING_VIBRATION = "vibration";
+	/**
+	 * 显示新消息
+	 */
+	public final static String SETTING_SHOW_NEW_MESSAGE = "show_new_message";
+	/**
+	 * 显示新消息
+	 */
+	public final static String SETTING_SHOW_LED = "show_LED";
+	/**
+	 * 断线自动重连
+	 */
+	public final static String SETTING_AUTO_RECONNECT = "auto_reconnect";
+	/**
+	 * 开机自动接收消息
+	 */
+	public final static String SETTING_AUTO_RECEIVE_MESSAGE = "auto_receive_message";
+	
+	
+	public static final String OFFLINE = "offline";
+	public static final String DND = "dnd";
+	public static final String XA = "xa";
+	public static final String AWAY = "away";
+	public static final String AVAILABLE = "available";
+	public static final String CHAT = "chat";
 	
 	
 	public static boolean hasKey(final String key) {
