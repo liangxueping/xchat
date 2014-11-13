@@ -2,9 +2,14 @@ package com.xchat.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -18,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.xchat.service.IConnectionStatusCallback;
 import com.xchat.service.XChatService;
 import com.xchat.system.T;
 import com.xchat.utils.DialogUtil;
@@ -25,7 +31,7 @@ import com.xchat.utils.MyUtil;
 import com.xchat.utils.PreferenceUtil;
 
 @SuppressLint("HandlerLeak")
-public class LoginActivity extends FragmentActivity implements TextWatcher{
+public class LoginActivity extends FragmentActivity implements TextWatcher,IConnectionStatusCallback{
 
 	public static final String LOGIN_ACTION = "com.xchat.action.LOGIN";
 	
@@ -69,12 +75,43 @@ public class LoginActivity extends FragmentActivity implements TextWatcher{
 		}
 
 	};
-	
+
+	ServiceConnection mServiceConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			xChatService = ((XChatService.XChatBinder) service).getService();
+			xChatService.registerConnectionStatusCallback(LoginActivity.this);
+			// 开始连接xmpp服务器
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			xChatService.unRegisterConnectionStatusCallback();
+			xChatService = null;
+		}
+
+	};
+
+	private void unbindXMPPService() {
+		try {
+			unbindService(mServiceConnection);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void bindXMPPService() {
+		Intent mServiceIntent = new Intent(this, XChatService.class);
+		mServiceIntent.setAction(LOGIN_ACTION);
+		bindService(mServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		initView();
+		bindXMPPService();
 	}
 
 	@Override
@@ -109,6 +146,7 @@ public class LoginActivity extends FragmentActivity implements TextWatcher{
 			mLoginOutTimeProcess.stop();
 			mLoginOutTimeProcess = null;
 		}
+		unbindXMPPService();
 	}
 	
 	private void initView() {
@@ -142,7 +180,6 @@ public class LoginActivity extends FragmentActivity implements TextWatcher{
 
 	public void onLoginClick(View v) {
 		mAccount = etAccount.getText().toString();
-//		mAccount = splitAndSaveServer(mAccount);
 		mPassword = etPassword.getText().toString();
 		if(TextUtils.isEmpty(mAccount)) {
 			T.showShort(this, R.string.null_account);
@@ -239,6 +276,24 @@ public class LoginActivity extends FragmentActivity implements TextWatcher{
 			this.running = false;
 			this.thread = null;
 			this.startTime = 0L;
+		}
+	}
+
+	@Override
+	public void connectionStatusChanged(int connectedState, String reason) {
+		if (dialogLogin != null && dialogLogin.isShowing()){
+			dialogLogin.dismiss();
+		}
+		if (mLoginOutTimeProcess != null && mLoginOutTimeProcess.running) {
+			mLoginOutTimeProcess.stop();
+			mLoginOutTimeProcess = null;
+		}
+		if (connectedState == XChatService.CONNECTED) {
+			save2Preferences();
+			startActivity(new Intent(this, MainActivity.class));
+			finish();
+		} else if (connectedState == XChatService.DISCONNECTED){
+			T.showLong(LoginActivity.this, getString(R.string.tip_login_failed) + reason);
 		}
 	}
 }

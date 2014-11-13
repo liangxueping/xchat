@@ -18,11 +18,20 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     
     <application
-        android:name="com.xchat.base.XChatApp"
+        android:name="com.xchat.base.BaseApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <service android:name="com.xchat.service.XChatService" />
+        <receiver android:name="com.xchat.broadcast.XChatBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        
         <activity
             android:name="com.xchat.activity.SplashActivity"
             android:label="@string/app_name" 

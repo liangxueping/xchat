@@ -4,15 +4,46 @@
     <string name="app_name">瞎聊</string>
     <string name="description"></string>
 
+	<string name="pull_to_refresh_pull_label">下拉刷新…</string>
+	<string name="pull_to_refresh_release_label">放开以刷新…</string>
+	<string name="pull_to_refresh_refreshing_label">正在载入…</string>
+	<string name="pull_to_refresh_from_bottom_pull_label">@string/pull_to_refresh_pull_label</string>
+	<string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
+	<string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
+    
 	<string name="all_rights_reserved">Copyright © X-Chat. All Rights Reserved.</string>
 	<string name="setting_about_description">我们的沟通从指间开始</string>
 	
 	<string name="account">帐号</string>
 	<string name="password">密码</string>
 	<string name="login">登 录</string>
+	<string name="rename">备注名</string>
+	<string name="add_friend">添加好友</string>
 	
 	<string name="hint_account">请输入用户名</string>
 	<string name="hint_password">请输入密码</string>
+	
+	<string name="conversation_net_error_label">请先连接上再试</string>
+	
+	<!-- Roster CONTEXTMENU -->
+	<string name="roster_contextmenu_title">%s选项</string>
+	<string name="roster_contextmenu_group_rename">重命名分组</string>
+	<string name="roster_group_rename_failed">默认分组不能重命名</string>
+	<string name="roster_contextmenu_contact_delete">删除好友</string>
+	<string name="roster_contextmenu_contact_delmsg">删除聊天记录</string>
+	<string name="roster_contextmenu_contact_open_chat">公众聊天</string>
+	<string name="roster_contextmenu_contact_rename">重命名</string>
+	<string name="roster_contextmenu_contact_request_auth">请求认证</string>
+	<string name="roster_contextmenu_contact_change_group">改变分组</string>
+	<!-- StatusPopUp -->
+	<string name="AddContact_SpinnerPrompt">选择分组</string>
+	
+	<!-- AddFriend -->
+	<string name="addFriend_Title">添加好友</string>
+	<string name="addFriend_Summ">请输入对方帐号、备注名并选择分组</string>
+	<string name="addFriend_aliasHint">备注名</string>
+	<string name="addrosteritemaddgroupchoice">增加新分组</string>
+	<string name="NewGroup_EditTextField_Hint">新分组名称</string>
 	
 	<string name="setting_save_password">记住密码</string>
 	<string name="setting_hide_login">隐身登录</string>
@@ -20,6 +51,21 @@
 	<string name="setting_silence_login">静音模式</string>
 	
 	<string name="tip_login">登录中</string>
+	<string name="tip_running_background">正在后台运行</string>
+	<string name="tip_login_failed">登录失败:</string>
+	<string name="tip_press_again_backrun">再按一次返回桌面</string>
+	<string name="tip_net_error_tip">当前网络不可用，请检查你的网络设置。</string>
+	
+	<string name="status_available">在线</string>
+	<string name="status_away">离开</string>
+	<string name="status_chat">Q我吧</string>
+	<string name="status_dnd">请勿打扰</string>
+	<string name="status_xa">隐身</string>
+	<string name="status_offline">离线</string>
+	<string name="status_busy">忙碌</string>
+	<string name="status_online">在线</string>
+	
+	<string name="default_group">我的好友</string>
 	
 	<string name="next">下一步</string>
 	

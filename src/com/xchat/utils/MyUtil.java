@@ -2,7 +2,7 @@ package com.xchat.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,8 +10,8 @@ import android.graphics.Matrix;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
-
-import com.xchat.base.XChatApp;
+import android.util.TypedValue;
+import com.xchat.base.BaseApp;
 
 public class MyUtil {
 
@@ -30,7 +30,23 @@ public class MyUtil {
 			return false;
 		}
 	}
-	
+	/**
+	 * 获取输入框颜色
+	 * @param ctx
+	 * @return
+	 */
+	@SuppressLint("InlinedApi")
+	public static int getEditTextColor(Context context) {
+		TypedValue tv = new TypedValue();
+		boolean found = context.getTheme().resolveAttribute(android.R.attr.editTextColor, tv, true);
+		if (found) {
+			// SDK 11+
+			return context.getResources().getColor(tv.resourceId);
+		} else {
+			// SDK < 11
+			return context.getResources().getColor(android.R.color.primary_text_light);
+		}
+	}
 
 	/**
 	 * 处理字符串中的表情
@@ -58,8 +74,8 @@ public class MyUtil {
 			int k = localMatcher.start();
 			int m = localMatcher.end();
 			if (m - k < 8) {
-				if (XChatApp.getInstance().getFaceMap().containsKey(str2)) {
-					int face = XChatApp.getInstance().getFaceMap().get(str2);
+				if (BaseApp.getInstance().getFaceMap().containsKey(str2)) {
+					int face = BaseApp.getInstance().getFaceMap().get(str2);
 					Bitmap bitmap = BitmapFactory.decodeResource(
 							context.getResources(), face);
 					if (bitmap != null) {

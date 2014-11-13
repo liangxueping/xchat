@@ -1,8 +1,7 @@
 package com.xchat.activity;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
 
 public class ChatActivity extends Activity {
 	//昵称对应的key
@@ -13,11 +12,4 @@ public class ChatActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 }

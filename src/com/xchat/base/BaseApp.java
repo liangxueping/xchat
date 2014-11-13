@@ -7,13 +7,13 @@ import android.app.Application;
 
 import com.xchat.activity.R;
 
-public class XChatApp extends Application {
+public class BaseApp extends Application {
 	public static final int NUM_PAGE = 6;// 总共有多少页
 	public static int NUM = 20;// 每页20个表情,还有最后一个删除button
 	private Map<String, Integer> mFaceMap = new LinkedHashMap<String, Integer>();
-	private static XChatApp mApplication;
+	private static BaseApp mApplication;
 
-	public static XChatApp getInstance() {
+	public static BaseApp getInstance() {
 		return mApplication;
 	}
 

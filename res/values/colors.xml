@@ -2,4 +2,7 @@
 <resources>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
+    
+    <color name="home_tab_bar_divider">#ffCACACA</color>
+    <color name="sidebar_item_background_activated_dark">#ff4c365d</color>
 </resources>
