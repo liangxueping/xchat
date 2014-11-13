@@ -22,4 +22,8 @@ public class Fragment4 extends Fragment{
 		super.onDestroy();
 		Log.i("myTag", "页面【3】我销毁了");
 	}
+	
+	public void readData(){
+		
+	}
 }

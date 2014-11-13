@@ -237,9 +237,9 @@ public class LoginActivity extends FragmentActivity implements TextWatcher,IConn
 		PreferenceUtil.setPrefBoolean(PreferenceUtil.SETTING_USE_TLS, isUseTls);
 		PreferenceUtil.setPrefBoolean(PreferenceUtil.SETTING_SILENCE_LOGIN, isSilenceLogin);
 		if(isHideLogin){
-			PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS, PreferenceUtil.XA);
+			PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.XA);
 		} else{
-			PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS, PreferenceUtil.AVAILABLE);
+			PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.AVAILABLE);
 		}
 	}
 

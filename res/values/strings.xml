@@ -18,7 +18,9 @@
 	<string name="password">密码</string>
 	<string name="login">登 录</string>
 	<string name="rename">备注名</string>
-	<string name="add_friend">添加好友</string>
+	<string name="move">移动到</string>
+	<string name="delete">删除</string>
+	<string name="open">打开</string>
 	
 	<string name="hint_account">请输入用户名</string>
 	<string name="hint_password">请输入密码</string>
@@ -35,15 +37,6 @@
 	<string name="roster_contextmenu_contact_rename">重命名</string>
 	<string name="roster_contextmenu_contact_request_auth">请求认证</string>
 	<string name="roster_contextmenu_contact_change_group">改变分组</string>
-	<!-- StatusPopUp -->
-	<string name="AddContact_SpinnerPrompt">选择分组</string>
-	
-	<!-- AddFriend -->
-	<string name="addFriend_Title">添加好友</string>
-	<string name="addFriend_Summ">请输入对方帐号、备注名并选择分组</string>
-	<string name="addFriend_aliasHint">备注名</string>
-	<string name="addrosteritemaddgroupchoice">增加新分组</string>
-	<string name="NewGroup_EditTextField_Hint">新分组名称</string>
 	
 	<string name="setting_save_password">记住密码</string>
 	<string name="setting_hide_login">隐身登录</string>
@@ -51,6 +44,8 @@
 	<string name="setting_silence_login">静音模式</string>
 	
 	<string name="tip_login">登录中</string>
+	<string name="tip_login_connecting">连接中&#8230;</string>
+	<string name="tip_login_disconnected">未连接</string>
 	<string name="tip_running_background">正在后台运行</string>
 	<string name="tip_login_failed">登录失败:</string>
 	<string name="tip_press_again_backrun">再按一次返回桌面</string>
@@ -65,7 +60,6 @@
 	<string name="status_busy">忙碌</string>
 	<string name="status_online">在线</string>
 	
-	<string name="default_group">我的好友</string>
 	
 	<string name="next">下一步</string>
 	
@@ -78,4 +72,25 @@
 	<string name="null_password">请输入密码</string>
 	<string name="timeout_try_again">网络连接超时，请重试</string>
 	
+	
+	<!-- StatusPopUp -->
+	<string name="default_group">我的好友</string>
+	<string name="AddContact_SpinnerPrompt">选择分组</string>
+	<string name="RenameGroup_summ">重命名分组%s为:</string>
+	<string name="RenameGroup_title">重命名分组</string>
+	<string name="RenameEntry_summ">重命名%1$s(%2$s)为:</string>
+	<string name="RenameEntry_title">重命名好友</string>
+	<string name="MoveRosterEntryToGroupDialog_summ">请选择一个分组</string>
+	<string name="MoveRosterEntryToGroupDialog_title">改变分组</string>
+	<string name="deleteRosterItem_text">确定删除%1$s(%2$s)?</string>
+	<string name="deleteRosterItem_title">删除好友</string>
+	<string name="deleteChatHistory_text">确定清空与%1$s(%2$s)的聊天消息记录?</string>
+	<string name="deleteChatHistory_title">删除最近会话</string>
+	<!-- AddFriend -->
+	<string name="add_friend">添加好友</string>
+	<string name="addFriend_Title">添加好友</string>
+	<string name="addFriend_Summ">请输入对方帐号、备注名并选择分组</string>
+	<string name="addFriend_aliasHint">备注名</string>
+	<string name="addrosteritemaddgroupchoice">增加新分组</string>
+	<string name="NewGroup_EditTextField_Hint">新分组名称</string>
 </resources>

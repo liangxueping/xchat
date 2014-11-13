@@ -51,6 +51,7 @@ import com.xchat.system.T;
 import com.xchat.utils.NetUtil;
 import com.xchat.utils.PreferenceUtil;
 import com.xchat.view.AddRosterItemDialog;
+import com.xchat.view.CustomDialog;
 import com.xchat.view.GroupNameView;
 import com.xchat.view.IphoneTreeView;
 
@@ -300,10 +301,8 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 	@SuppressWarnings("static-access")
 	void moveRosterItemToGroupDialog(final String jabberID) {
 		LayoutInflater inflater = (LayoutInflater) mFragmentCallBack.getMainActivity().getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
-		View group = inflater
-				.inflate(R.layout.moverosterentrytogroupview, null);
-		final GroupNameView gv = (GroupNameView) group
-				.findViewById(R.id.moverosterentrytogroupview_gv);
+		View group = inflater.inflate(R.layout.moverosterentrytogroupview, null);
+		final GroupNameView gv = (GroupNameView) group.findViewById(R.id.moverosterentrytogroupview_gv);
 		gv.setGroupList(getRosterGroups());
 		new CustomDialog.Builder(mFragmentCallBack.getMainActivity())
 				.setTitle(R.string.MoveRosterEntryToGroupDialog_title)
@@ -430,7 +429,7 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 	
 	public void updateTitle(){
 		if(hasUpdateTitle && mTitleNameView != null){
-			mTitleNameView.setText(XMPPHelper.splitJidAndServer(PreferenceUtil.getPrefString(PreferenceUtil.ACCOUNT,"")));
+			mTitleNameView.setText(PreferenceUtil.getPrefString(PreferenceUtil.ACCOUNT,""));
 			setStatusImage(true);
 			mTitleProgressBar.setVisibility(View.GONE);
 			hasUpdateTitle = false;
@@ -450,7 +449,7 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 			mTitleStatusView.setVisibility(View.GONE);
 			return;
 		}
-		String statusMode = PreferenceUtil.getPrefString(PreferenceUtil.STATUS_MODE, PreferenceUtil.AVAILABLE);
+		String statusMode = PreferenceUtil.getPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.AVAILABLE);
 		int statusId = mStatusMap.get(statusMode);
 		if (statusId == -1) {
 			mTitleStatusView.setVisibility(View.GONE);
@@ -467,7 +466,7 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 	@Override
 	public void onNetChange() {
 		if (NetUtil.getNetworkState(mContext) == NetUtil.NETWORN_NONE) {
-			T.showShort(mContext, R.string.net_error_tip);
+			T.showShort(mContext, R.string.tip_net_error_tip);
 			mNetErrorView.setVisibility(View.VISIBLE);
 		} else {
 			mNetErrorView.setVisibility(View.GONE);
@@ -478,18 +477,18 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 	public void connectionStatusChanged(int connectedState, String reason) {
 		switch (connectedState) {
 		case XChatService.CONNECTED:
-			mTitleNameView.setText(XMPPHelper.splitJidAndServer(PreferenceUtil.getPrefString(PreferenceUtil.ACCOUNT, "")));
+			mTitleNameView.setText(PreferenceUtil.getPrefString(PreferenceUtil.ACCOUNT, ""));
 			mTitleProgressBar.setVisibility(View.GONE);
 			// mTitleStatusView.setVisibility(View.GONE);
 			setStatusImage(true);
 			break;
 		case XChatService.CONNECTING:
-			mTitleNameView.setText(R.string.login_prompt_msg);
+			mTitleNameView.setText(R.string.tip_login_connecting);
 			mTitleProgressBar.setVisibility(View.VISIBLE);
 			mTitleStatusView.setVisibility(View.GONE);
 			break;
 		case XChatService.DISCONNECTED:
-			mTitleNameView.setText(R.string.login_prompt_no);
+			mTitleNameView.setText(R.string.tip_login_disconnected);
 			mTitleProgressBar.setVisibility(View.GONE);
 			mTitleStatusView.setVisibility(View.GONE);
 			T.showLong(mContext, reason);
@@ -529,28 +528,28 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 				switch (actionId) {
 				case ID_CHAT:
 					mTitleStatusView.setImageResource(R.drawable.status_qme);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MODE, PreferenceUtil.CHAT);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_chat));
+					PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.CHAT);
+					PreferenceUtil.setPrefString(PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_chat));
 					break;
 				case ID_AVAILABLE:
 					mTitleStatusView.setImageResource(R.drawable.status_online);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MODE, PreferenceUtil.AVAILABLE);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_available));
+					PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.AVAILABLE);
+					PreferenceUtil.setPrefString(PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_available));
 					break;
 				case ID_AWAY:
 					mTitleStatusView.setImageResource(R.drawable.status_leave);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MODE, PreferenceUtil.AWAY);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_away));
+					PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.AWAY);
+					PreferenceUtil.setPrefString(PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_away));
 					break;
 				case ID_XA:
 					mTitleStatusView.setImageResource(R.drawable.status_invisible);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MODE, PreferenceUtil.XA);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_xa));
+					PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.XA);
+					PreferenceUtil.setPrefString(PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_xa));
 					break;
 				case ID_DND:
 					mTitleStatusView.setImageResource(R.drawable.status_shield);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MODE, PreferenceUtil.DND);
-					PreferenceUtil.setPrefString(mContext, PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_dnd));
+					PreferenceUtil.setPrefString(PreferenceUtil.SETTING_STATUS_MODE, PreferenceUtil.DND);
+					PreferenceUtil.setPrefString(PreferenceUtil.STATUS_MESSAGE, getString(R.string.status_dnd));
 					break;
 				default:
 					break;
@@ -595,7 +594,7 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 			if (!isConnected()) {// 如果没有连接重新连接
 				String usr = PreferenceUtil.getPrefString(PreferenceUtil.ACCOUNT, "");
 				String password = PreferenceUtil.getPrefString(PreferenceUtil.PASSWORD, "");
-				mFragmentCallBack.getService().Login(usr, password);
+				mFragmentCallBack.getService().login(usr, password);
 			}
 			try {
 				Thread.sleep(2000);

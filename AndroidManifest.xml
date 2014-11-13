@@ -31,6 +31,9 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <provider
+            android:name="com.xchat.db.RosterProvider"
+            android:authorities="com.xchat.provider.Roster" />
         
         <activity
             android:name="com.xchat.activity.SplashActivity"

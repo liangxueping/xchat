@@ -14,6 +14,8 @@ public class PreferenceUtil {
 
 	public static final String ACCOUNT = "account";
 	public static final String PASSWORD = "password";
+	
+	public static final String STATUS_MESSAGE = "status_message";
 	/**
 	 * 使用TLS加密
 	 */
@@ -25,7 +27,7 @@ public class PreferenceUtil {
 	/**
 	 * 登录状态
 	 */
-	public static final String SETTING_STATUS = "status_mode";
+	public static final String SETTING_STATUS_MODE = "status_mode";
 	/**
 	 * 震动
 	 */

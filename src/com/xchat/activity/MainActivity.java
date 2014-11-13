@@ -21,13 +21,14 @@ import com.xchat.fragment.Fragment1;
 import com.xchat.fragment.Fragment3;
 import com.xchat.fragment.Fragment4;
 import com.xchat.fragment.FriendsFragment;
+import com.xchat.fragment.IFragmentCallBack;
 import com.xchat.service.XChatService;
 import com.xchat.system.T;
 import com.xchat.utils.PreferenceUtil;
 
-public class MainActivity extends BaseActivity implements OnClickListener,OnPageChangeListener{
+public class MainActivity extends BaseActivity implements OnClickListener,OnPageChangeListener,IFragmentCallBack{
 
-	private XChatService mXxService;
+	private XChatService xChatService;
 	private ViewPager pager;
 	private List<String> titleList;
 	private List<Fragment> fragList;
@@ -42,13 +43,13 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			mXxService = ((XChatService.XChatBinder) service).getService();
-			mXxService.registerConnectionStatusCallback(friendsFragment);
+			xChatService = ((XChatService.XChatBinder) service).getService();
+			xChatService.registerConnectionStatusCallback(friendsFragment);
 			// 开始连接xmpp服务器
-			if (!mXxService.isAuthenticated()) {
+			if (!xChatService.isAuthenticated()) {
 				String account = PreferenceUtil.getPrefString(PreferenceUtil.ACCOUNT, "");
 				String password = PreferenceUtil.getPrefString(PreferenceUtil.PASSWORD, "");
-				mXxService.login(account, password);
+				xChatService.login(account, password);
 			} else {
 				friendsFragment.hasUpdateTitle = true;
 				friendsFragment.updateTitle();
@@ -57,8 +58,8 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			mXxService.unRegisterConnectionStatusCallback();
-			mXxService = null;
+			xChatService.unRegisterConnectionStatusCallback();
+			xChatService = null;
 		}
 
 	};
@@ -213,5 +214,15 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 		}
 		v.setSelected(true);
 		currSelectedTab = v;
+	}
+
+	@Override
+	public XChatService getService() {
+		return xChatService;
+	}
+
+	@Override
+	public MainActivity getMainActivity() {
+		return this;
 	}
 }

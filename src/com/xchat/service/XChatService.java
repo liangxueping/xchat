@@ -392,6 +392,63 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 //			L.e("exception in addRosterItem(): " + e.getMessage());
 //		}
 	}
+
+	/**
+	 * 删除联系人
+	 * @param user
+	 */
+	public void removeRosterItem(String user) {
+//		try {
+//			mSmackable.removeRosterItem(user);
+//		} catch (XChatException e) {
+//			T.showShort(this, e.getMessage());
+//			L.e("exception in removeRosterItem(): " + e.getMessage());
+//		}
+	}
+
+	/**
+	 * 将联系人移动到其他组
+	 * @param user
+	 * @param group
+	 */
+	public void moveRosterItemToGroup(String user, String group) {
+//		try {
+//			mSmackable.moveRosterItemToGroup(user, group);
+//		} catch (XChatException e) {
+//			T.showShort(this, e.getMessage());
+//			L.e("exception in moveRosterItemToGroup(): " + e.getMessage());
+//		}
+	}
+
+	/**
+	 * 重命名联系人
+	 * @param user
+	 * @param newName
+	 */
+	public void renameRosterItem(String user, String newName) {
+//		try {
+//			mSmackable.renameRosterItem(user, newName);
+//		} catch (XChatException e) {
+//			T.showShort(this, e.getMessage());
+//			L.e("exception in renameRosterItem(): " + e.getMessage());
+//		}
+	}
+
+	/**
+	 * 重命名组
+	 * @param group
+	 * @param newGroup
+	 */
+	public void renameRosterGroup(String group, String newGroup) {
+//		mSmackable.renameRosterGroup(group, newGroup);
+	}
+
+	/**
+	 *  设置连接状态
+	 */
+	public void setStatusFromConfig() {
+//		mSmackable.setStatusFromConfig();
+	}
 	
 	public class XChatBinder extends Binder {
 		public XChatService getService() {
