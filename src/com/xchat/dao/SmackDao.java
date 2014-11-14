@@ -1,33 +1,61 @@
 package com.xchat.dao;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.Roster.SubscriptionMode;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptRequest;
 
-import com.xchat.db.RosterProvider;
-import com.xchat.db.RosterProvider.RosterConstants;
+import com.xchat.base.BaseDao;
+import com.xchat.db.ChatProvider.ChatConstants;
 import com.xchat.service.XChatService;
+import com.xchat.utils.PreferenceUtil;
 
-public class SmackDao implements IXChatDao {
-
-	/**
-	 * 未连接
-	 */
-	public static boolean IS_DEBUG = false;
+public class SmackDao extends BaseDao implements IXChatDao {
 	
-	private final ContentResolver mContentResolver;
+
+	private XChatService xChartService;
+	private ConnectionConfiguration mXMPPConfig;
+	private XMPPConnection mXMPPConnection;
+	
 	
 	public SmackDao(XChatService service) {
 		IS_DEBUG = true;
-		
+		this.xChartService = service;
 		mContentResolver = service.getContentResolver();
+		
+		boolean requireSsl = PreferenceUtil.getPrefBoolean(PreferenceUtil.SETTING_USE_TLS, false);
 		
 		if(IS_DEBUG){
 			initDebugData();
+		}else {
+			this.mXMPPConfig = new ConnectionConfiguration(PreferenceUtil.HOST_SERVER, PreferenceUtil.HOST_PORT);
+			this.mXMPPConfig.setReconnectionAllowed(false);
+			this.mXMPPConfig.setSendPresence(false);
+			this.mXMPPConfig.setCompressionEnabled(false); // disable for now
+			this.mXMPPConfig.setDebuggerEnabled(false);
+			if (requireSsl){
+				this.mXMPPConfig.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
+			}
+			this.mXMPPConnection = new XMPPConnection(mXMPPConfig);
+			mContentResolver = service.getContentResolver();
+			
+			Roster.setDefaultSubscriptionMode(SubscriptionMode.accept_all);
 		}
 	}
 
 	@Override
 	public boolean login(String account, String password){
+		if(IS_DEBUG){
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean logout() {
 		if(IS_DEBUG){
 			return true;
 		}
@@ -45,34 +73,17 @@ public class SmackDao implements IXChatDao {
 	}
 
 	@Override
-	public boolean logout() {
-		if(IS_DEBUG){
-			return true;
-		}
-		
-		return false;
-	}
-
-	public void initDebugData() {
-		mContentResolver.delete(RosterProvider.CONTENT_URI, null, null);
-		int i = 0;
-		for (; i < 10; i++){
-			final ContentValues values = new ContentValues();
-			values.put(RosterConstants.JID, Math.random()*10000);
-			values.put(RosterConstants.ALIAS, "Name:"+i);
-			values.put(RosterConstants.STATUS_MODE, 1);
-			values.put(RosterConstants.STATUS_MESSAGE, 1);
-			values.put(RosterConstants.GROUP, "我的好友");
-			mContentResolver.insert(RosterProvider.CONTENT_URI, values);
-		}
-		for (; i < 20; i++){
-			final ContentValues values = new ContentValues();
-			values.put(RosterConstants.JID, Math.random()*10000);
-			values.put(RosterConstants.ALIAS, "Name:"+i);
-			values.put(RosterConstants.STATUS_MODE, 1);
-			values.put(RosterConstants.STATUS_MESSAGE, 1);
-			values.put(RosterConstants.GROUP, "同事");
-			mContentResolver.insert(RosterProvider.CONTENT_URI, values);
+	public void sendMessage(String account, String message) {
+		final Message newMessage = new Message(account, Message.Type.chat);
+		newMessage.setBody(message);
+		newMessage.addExtension(new DeliveryReceiptRequest());
+		if (isAuthenticated()) {
+			addChatMessageToDB(ChatConstants.OUTGOING, account, message, ChatConstants.DS_SENT_OR_READ, System.currentTimeMillis(), newMessage.getPacketID());
+			if(IS_DEBUG){
+				mXMPPConnection.sendPacket(newMessage);
+			}
+		} else {
+			addChatMessageToDB(ChatConstants.OUTGOING, account, message, ChatConstants.DS_NEW, System.currentTimeMillis(), newMessage.getPacketID());
 		}
 	}
 }

@@ -1,7 +1,10 @@
 package com.xchat.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,8 +14,10 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.util.TypedValue;
+
 import com.xchat.base.BaseApp;
 
+@SuppressLint("SimpleDateFormat")
 public class MyUtil {
 
 	private static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
@@ -58,8 +63,7 @@ public class MyUtil {
 	 *            是否需要小图片
 	 * @return
 	 */
-	public static CharSequence convertNormalStringToSpannableString(
-			Context context, String message, boolean small) {
+	public static CharSequence convertNormalStringToSpannableString(Context context, String message, boolean small) {
 		String hackTxt;
 		if (message.startsWith("[") && message.endsWith("]")) {
 			hackTxt = message + " ";
@@ -108,5 +112,42 @@ public class MyUtil {
 			}
 		}
 		return value;
+	}
+	public static String getTime(long time) {
+		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
+		return format.format(new Date(time));
+	}
+
+	public static String getHourAndMin(long time) {
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+		return format.format(new Date(time));
+	}
+
+	public static String getChatTime(long timesamp) {
+		String result = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("dd");
+		Date today = new Date(System.currentTimeMillis());
+		Date otherDay = new Date(timesamp);
+		int temp = Integer.parseInt(sdf.format(today))
+				- Integer.parseInt(sdf.format(otherDay));
+
+		switch (temp) {
+		case 0:
+			result = "今天 " + getHourAndMin(timesamp);
+			break;
+		case 1:
+			result = "昨天 " + getHourAndMin(timesamp);
+			break;
+		case 2:
+			result = "前天 " + getHourAndMin(timesamp);
+			break;
+
+		default:
+			// result = temp + "天前 ";
+			result = getTime(timesamp);
+			break;
+		}
+
+		return result;
 	}
 }

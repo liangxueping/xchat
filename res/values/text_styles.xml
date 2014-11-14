@@ -10,9 +10,19 @@
         <item name="android:textColor">@color/skin_dark_gray</item>
     </style>
     
+    <style name="B5_Font">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/skin_black</item>
+    </style>
+    
     <style name="B7_Font">
         <item name="android:textSize">19.0sp</item>
         <item name="android:textColor">@color/skin_black</item>
+    </style>
+    
+    <style name="G1_Font">
+        <item name="android:textSize">12.0sp</item>
+        <item name="android:textColor">#ffeeeeee</item>
     </style>
     
 </resources>

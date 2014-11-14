@@ -2,7 +2,13 @@
 <resources>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
+    <color name="black_8">#00000000</color>
+    <!-- 浅灰色 -->
+    <color name="light_gray">#ffB2B2B2</color> 
+    <!-- 深灰色 -->
+    <color name="darker_gray">#ff5F646C</color> 
     
     <color name="home_tab_bar_divider">#ffCACACA</color>
     <color name="sidebar_item_background_activated_dark">#ff4c365d</color>
+    <color name="thirty_transparent_black">#4d000000</color>
 </resources>

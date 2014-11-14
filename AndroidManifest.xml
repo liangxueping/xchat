@@ -34,6 +34,9 @@
         <provider
             android:name="com.xchat.db.RosterProvider"
             android:authorities="com.xchat.provider.Roster" />
+         <provider
+            android:name="com.xchat.db.ChatProvider"
+            android:authorities="com.xchat.provider.Chats" />
         
         <activity
             android:name="com.xchat.activity.SplashActivity"
@@ -55,6 +58,17 @@
             android:label="@string/app_name" 
             android:theme="@android:style/Theme.Light.NoTitleBar">
         </activity>
+        <activity
+            android:name="com.xchat.activity.ChatActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Light.NoTitleBar">
+        </activity>
+        <activity
+            android:name="com.xchat.activity.PersonInfoActivity"
+            android:label="@string/app_name" 
+            android:theme="@android:style/Theme.Light.NoTitleBar">
+        </activity>
+        
     </application>
 
 </manifest>

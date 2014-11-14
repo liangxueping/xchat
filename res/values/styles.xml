@@ -39,4 +39,12 @@
         <item name="android:minWidth">30.0dip</item>
         <item name="android:minHeight">30.0dip</item>
     </style>
+    
+    <!-- 滑动返回主题 -->
+    <style name="SwipeBackLayout">
+        <item name="edge_size">50dip</item>
+        <item name="shadow_left">@drawable/shadow_left</item>
+        <item name="shadow_right">@drawable/shadow_right</item>
+        <item name="shadow_bottom">@drawable/shadow_bottom</item>
+    </style>
 </resources>

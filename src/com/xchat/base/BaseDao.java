@@ -1,0 +1,65 @@
+package com.xchat.base;
+
+import android.content.ContentResolver;
+import android.content.ContentValues;
+
+import com.xchat.db.ChatProvider;
+import com.xchat.db.ChatProvider.ChatConstants;
+import com.xchat.db.RosterProvider;
+import com.xchat.db.RosterProvider.RosterConstants;
+
+public class BaseDao {
+
+	/**
+	 * 未连接
+	 */
+	public static boolean IS_DEBUG = false;
+	
+	public ContentResolver mContentResolver;
+	
+	public BaseDao(){
+		
+	}
+	/**
+	 * 消息记录存入数据库
+	 * @param direction 消息类型
+	 * @param account 用户名
+	 * @param message 消息内容
+	 * @param delivery_status 消息状态
+	 * @param ts 创建时间
+	 * @param packetID
+	 */
+	public void addChatMessageToDB(int direction, String account, String message, int delivery_status, long ts, String packetID) {
+		ContentValues values = new ContentValues();
+		values.put(ChatConstants.DIRECTION, direction);
+		values.put(ChatConstants.JID, account);
+		values.put(ChatConstants.MESSAGE, message);
+		values.put(ChatConstants.DELIVERY_STATUS, delivery_status);
+		values.put(ChatConstants.DATE, ts);
+		values.put(ChatConstants.PACKET_ID, packetID);
+
+		mContentResolver.insert(ChatProvider.CONTENT_URI, values);
+	}
+	public void initDebugData() {
+		mContentResolver.delete(RosterProvider.CONTENT_URI, null, null);
+		int i = 0;
+		for (; i < 10; i++){
+			final ContentValues values = new ContentValues();
+			values.put(RosterConstants.JID, Math.random()*10000);
+			values.put(RosterConstants.ALIAS, "Name:"+i);
+			values.put(RosterConstants.STATUS_MODE, 1);
+			values.put(RosterConstants.STATUS_MESSAGE, 1);
+			values.put(RosterConstants.GROUP, "我的好友");
+			mContentResolver.insert(RosterProvider.CONTENT_URI, values);
+		}
+		for (; i < 20; i++){
+			final ContentValues values = new ContentValues();
+			values.put(RosterConstants.JID, Math.random()*10000);
+			values.put(RosterConstants.ALIAS, "Name:"+i);
+			values.put(RosterConstants.STATUS_MODE, 1);
+			values.put(RosterConstants.STATUS_MESSAGE, 1);
+			values.put(RosterConstants.GROUP, "同事");
+			mContentResolver.insert(RosterProvider.CONTENT_URI, values);
+		}
+	}
+}

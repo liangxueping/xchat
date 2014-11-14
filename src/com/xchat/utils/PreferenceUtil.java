@@ -12,6 +12,9 @@ public class PreferenceUtil {
 	
 	public static final String APP_VERSION= "app_version";
 
+	public static final String HOST_SERVER = "106.120.91.86";
+	public static final int HOST_PORT = 5222;
+
 	public static final String ACCOUNT = "account";
 	public static final String PASSWORD = "password";
 	
@@ -31,31 +34,36 @@ public class PreferenceUtil {
 	/**
 	 * 震动
 	 */
-	public final static String SETTING_VIBRATION = "vibration";
+	public static final String SETTING_VIBRATION = "vibration";
 	/**
 	 * 显示新消息
 	 */
-	public final static String SETTING_SHOW_NEW_MESSAGE = "show_new_message";
+	public static final String SETTING_SHOW_NEW_MESSAGE = "show_new_message";
 	/**
 	 * 显示新消息
 	 */
-	public final static String SETTING_SHOW_LED = "show_LED";
+	public static final String SETTING_SHOW_LED = "show_LED";
 	/**
 	 * 断线自动重连
 	 */
-	public final static String SETTING_AUTO_RECONNECT = "auto_reconnect";
+	public static final String SETTING_AUTO_RECONNECT = "auto_reconnect";
 	/**
 	 * 开机自动接收消息
 	 */
-	public final static String SETTING_AUTO_RECEIVE_MESSAGE = "auto_receive_message";
+	public static final String SETTING_AUTO_RECEIVE_MESSAGE = "auto_receive_message";
 	/**
 	 * 通知栏关机图标
 	 */
-	public final static String SETTING_FOREGROUND = "foreground_service";
+	public static final String SETTING_FOREGROUND = "foreground_service";
 	/**
 	 * 显示离线好友
 	 */
-	public final static String SETTING_SHOW_OFFLINE = "show_offline";
+	public static final String SETTING_SHOW_OFFLINE = "show_offline";
+	/**
+	 * 聊天显示自己头像
+	 */
+	public static final String SETTING_SHOW_MY_HEAD = "show_my_head";
+	
 	
 	public static final String OFFLINE = "offline";
 	public static final String DND = "dnd";

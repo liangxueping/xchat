@@ -9,6 +9,7 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -27,6 +28,8 @@ import com.xchat.broadcast.XChatBroadcastReceiver;
 import com.xchat.broadcast.XChatBroadcastReceiver.EventHandler;
 import com.xchat.dao.IXChatDao;
 import com.xchat.dao.SmackDao;
+import com.xchat.db.ChatProvider;
+import com.xchat.db.ChatProvider.ChatConstants;
 import com.xchat.utils.NetUtil;
 import com.xchat.utils.PreferenceUtil;
 
@@ -386,7 +389,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 */
 	public void addRosterItem(String user, String alias, String group) {
 //		try {
-//			mSmackable.addRosterItem(user, alias, group);
+//			xChatDao.addRosterItem(user, alias, group);
 //		} catch (XChatException e) {
 //			T.showShort(this, e.getMessage());
 //			L.e("exception in addRosterItem(): " + e.getMessage());
@@ -399,7 +402,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 */
 	public void removeRosterItem(String user) {
 //		try {
-//			mSmackable.removeRosterItem(user);
+//			xChatDao.removeRosterItem(user);
 //		} catch (XChatException e) {
 //			T.showShort(this, e.getMessage());
 //			L.e("exception in removeRosterItem(): " + e.getMessage());
@@ -413,7 +416,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 */
 	public void moveRosterItemToGroup(String user, String group) {
 //		try {
-//			mSmackable.moveRosterItemToGroup(user, group);
+//			xChatDao.moveRosterItemToGroup(user, group);
 //		} catch (XChatException e) {
 //			T.showShort(this, e.getMessage());
 //			L.e("exception in moveRosterItemToGroup(): " + e.getMessage());
@@ -427,7 +430,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 */
 	public void renameRosterItem(String user, String newName) {
 //		try {
-//			mSmackable.renameRosterItem(user, newName);
+//			xChatDao.renameRosterItem(user, newName);
 //		} catch (XChatException e) {
 //			T.showShort(this, e.getMessage());
 //			L.e("exception in renameRosterItem(): " + e.getMessage());
@@ -440,14 +443,44 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 * @param newGroup
 	 */
 	public void renameRosterGroup(String group, String newGroup) {
-//		mSmackable.renameRosterGroup(group, newGroup);
+//		xChatDao.renameRosterGroup(group, newGroup);
 	}
 
 	/**
 	 *  设置连接状态
 	 */
 	public void setStatusFromConfig() {
-//		mSmackable.setStatusFromConfig();
+//		xChatDao.setStatusFromConfig();
+	}
+
+	/**
+	 * 发送消息
+	 * @param user
+	 * @param message
+	 */
+	public void sendMessage(String user, String message) {
+		if (xChatDao != null){
+			xChatDao.sendMessage(user, message);
+		} else{
+			//连接已断开，消息存入库表，登陆后发送。
+			ContentValues values = new ContentValues();
+			values.put(ChatConstants.DIRECTION, ChatConstants.OUTGOING);
+			values.put(ChatConstants.JID, user);
+			values.put(ChatConstants.MESSAGE, message);
+			values.put(ChatConstants.DELIVERY_STATUS, ChatConstants.DS_NEW);
+			values.put(ChatConstants.DATE, System.currentTimeMillis());
+			getContentResolver().insert(ChatProvider.CONTENT_URI, values);
+		}
+	}
+	/**
+	 * 发送文件
+	 * @param user
+	 * @param filePaht
+	 */
+	public void sendFile(String user, String filePaht) {
+//		if (xChatDao != null){
+//			xChatDao.sendFile(user, filePaht);
+//		}
 	}
 	
 	public class XChatBinder extends Binder {
