@@ -10,10 +10,12 @@ public class PreferenceUtil {
 	//缓存文件名
 	public static final String PREF_FILE_NAME = "common_settings";
 	
-	public static final String APP_VERSION= "app_version";
+	public static final String APP_VERSION = "app_version";
+	
 
 	public static final String HOST_SERVER = "106.120.91.86";
 	public static final int HOST_PORT = 5222;
+	public static final String HOST_RESSOURCE = "X-CHAT 1.0";
 
 	public static final String ACCOUNT = "account";
 	public static final String PASSWORD = "password";
@@ -40,7 +42,7 @@ public class PreferenceUtil {
 	 */
 	public static final String SETTING_SHOW_NEW_MESSAGE = "show_new_message";
 	/**
-	 * 显示新消息
+	 * 显示消息指示灯
 	 */
 	public static final String SETTING_SHOW_LED = "show_LED";
 	/**
@@ -63,6 +65,14 @@ public class PreferenceUtil {
 	 * 聊天显示自己头像
 	 */
 	public static final String SETTING_SHOW_MY_HEAD = "show_my_head";
+	/**
+	 * 静音模式
+	 */
+	public static final String SETTING_SCLIENT_NOTIFY = "sclient_notify";
+	/**
+	 * 发送离线报告
+	 */
+	public static final String SETTING_REPORT_CRASH = "setting_report_crash";
 	
 	
 	public static final String OFFLINE = "offline";

@@ -26,6 +26,15 @@ public interface IXChatDao {
 	 * @param message
 	 */
 	public void sendMessage(String account, String message);
-	
+	/**
+	 * 更新在线状态
+	 */
+	public void setStatusFromConfig();
+	/**
+	 * 根据ID获取显示名称
+	 * @param id
+	 * @return
+	 */
+	public String getNameByID(String id);
 
 }

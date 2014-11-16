@@ -21,6 +21,8 @@
 	<string name="move">移动到</string>
 	<string name="delete">删除</string>
 	<string name="open">打开</string>
+	<string name="cancel">取消</string>
+	<string name="exit">退出</string>
 	
 	<string name="hint_account">请输入用户名</string>
 	<string name="hint_password">请输入密码</string>
@@ -102,4 +104,10 @@
 	<string name="NewGroup_EditTextField_Hint">新分组名称</string>
 	<string name="chat_send">发送</string>
 	<string name="aio_ime_action_label">完成</string>
+	<string name="recent_chat_fragment_title">最近会话</string>
+	<string name="settings_fragment_title">设  置</string>
+	<string name="logout_exit_account">退出当前帐号</string>
+	<string name="exit_dialog_msg">退出后不会删除任何历史数据，下次登录依然可以使用本帐号</string>
+	<string name="open_switch_account">切换帐号</string>
+	<string name="open_switch_account_msg">注销本帐号，并使用其他帐号登录?</string>
 </resources>

@@ -58,4 +58,16 @@ public class AndroidpnDao extends BaseDao implements IXChatDao {
 			addChatMessageToDB(ChatConstants.OUTGOING, account, message, ChatConstants.DS_NEW, System.currentTimeMillis(), newMessage.getPacketID());
 		}
 	}
+
+	@Override
+	public void setStatusFromConfig() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getNameByID(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

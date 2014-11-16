@@ -17,11 +17,11 @@ import android.view.View.OnClickListener;
 
 import com.xchat.adapter.MyFragmentPagerAdapter;
 import com.xchat.base.BaseActivity;
-import com.xchat.fragment.Fragment1;
 import com.xchat.fragment.Fragment3;
-import com.xchat.fragment.Fragment4;
+import com.xchat.fragment.SettingsFragment;
 import com.xchat.fragment.FriendsFragment;
 import com.xchat.fragment.IFragmentCallBack;
+import com.xchat.fragment.RecentChatFragment;
 import com.xchat.service.XChatService;
 import com.xchat.system.T;
 import com.xchat.utils.PreferenceUtil;
@@ -32,10 +32,10 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 	private ViewPager pager;
 	private List<String> titleList;
 	private List<Fragment> fragList;
-	public Fragment1 recentChatFragment;
+	public RecentChatFragment recentChatFragment;
 	public FriendsFragment friendsFragment;
 	public Fragment3 fragment3;
-	public Fragment4 settingsFragment;
+	public SettingsFragment settingsFragment;
 
 	private View tabRecentChat, tabFriendsFragment, tabFragment3, tabSettingsFragment, currSelectedTab;
 	
@@ -131,10 +131,10 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 		titleList.add("第三页");
 		titleList.add("第四页");
 
-		recentChatFragment = new Fragment1();
+		recentChatFragment = new RecentChatFragment();
 		friendsFragment = new FriendsFragment();
 		fragment3 = new Fragment3();
-		settingsFragment = new Fragment4();
+		settingsFragment = new SettingsFragment();
 
 		fragList = new ArrayList<Fragment>();
 		fragList.add(recentChatFragment);
@@ -215,7 +215,9 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 		v.setSelected(true);
 		currSelectedTab = v;
 	}
-
+	public void updateRoster() {
+		friendsFragment.updateRoster();
+	}
 	@Override
 	public XChatService getService() {
 		return xChatService;

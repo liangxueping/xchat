@@ -13,6 +13,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -50,15 +51,23 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	/**
 	 * 网络错误
 	 */
-	public static final String NETWORK_ERROR = "network error";
+	public static final String NETWORK_ERROR = "网络连接异常，请检查网络设置";
 	/**
 	 * 登录失败
 	 */
-	public static final String LOGIN_FAILED = "login failed";
+	public static final String LOGIN_FAILED = "登录失败";
 	/**
 	 * 手动退出
 	 */
-	public static final String LOGOUT = "logout";
+	public static final String LOGOUT = "手动退出";
+	/**
+	 * 连接超时
+	 */
+	public static final String PONG_TIMEOUT = "连接超时";
+	/**
+	 * 没有警告的断开连接
+	 */
+	public static final String DISCONNECTED_WITHOUT_WARNING = "已断开链接，请检查网络设置";
 	/**
 	 * 自动重连时间
 	 */
@@ -262,6 +271,20 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 			mConnectionStatusCallback.connectionStatusChanged(mConnectedState, "");
 		}
 	}
+
+	/**
+	 * 非UI线程连接失败反馈
+	 * 
+	 * @param reason
+	 */
+	public void postConnectionFailed(final String reason) {
+		mMainHandler.post(new Runnable() {
+			public void run() {
+				connectionFailed(reason);
+			}
+		});
+	}
+	
 	/**
 	 * UI线程反馈连接失败
 	 * @param reason
@@ -344,11 +367,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 					});
 				} else {
 					//登陆失败
-					mMainHandler.post(new Runnable() {
-						public void run() {
-							connectionFailed(LOGIN_FAILED);
-						}
-					});
+					postConnectionFailed(LOGIN_FAILED);
 				}
 			}
 
@@ -450,7 +469,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 *  设置连接状态
 	 */
 	public void setStatusFromConfig() {
-//		xChatDao.setStatusFromConfig();
+		xChatDao.setStatusFromConfig();
 	}
 
 	/**
@@ -482,6 +501,35 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 //			xChatDao.sendFile(user, filePaht);
 //		}
 	}
+	/**
+	 * 收到新消息
+	 * @param from
+	 * @param message
+	 */
+	public void newMessage(final String from, final String message) {
+		mMainHandler.post(new Runnable() {
+			public void run() {
+				if (!PreferenceUtil.getPrefBoolean(PreferenceUtil.SETTING_SCLIENT_NOTIFY, false))
+					MediaPlayer.create(XChatService.this, R.raw.office).start();
+				if (!isAppOnForeground()){
+					notifyClient(from, xChatDao.getNameByID(from), message, !mIsBoundTo.contains(from));
+				}
+			}
+		});
+	}
+
+	/**
+	 * 联系人改变
+	 */
+	public void rosterChanged() {
+		// gracefully handle^W ignore events after a disconnect
+		if (xChatDao == null)
+			return;
+		if (xChatDao != null && !xChatDao.isAuthenticated()) {
+			connectionFailed(DISCONNECTED_WITHOUT_WARNING);
+		}
+	}
+	
 	
 	public class XChatBinder extends Binder {
 		public XChatService getService() {

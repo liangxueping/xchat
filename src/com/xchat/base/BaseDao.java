@@ -2,11 +2,13 @@ package com.xchat.base;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.net.Uri;
 
 import com.xchat.db.ChatProvider;
 import com.xchat.db.ChatProvider.ChatConstants;
 import com.xchat.db.RosterProvider;
 import com.xchat.db.RosterProvider.RosterConstants;
+import com.xchat.utils.StatusMode;
 
 public class BaseDao {
 
@@ -40,6 +42,29 @@ public class BaseDao {
 
 		mContentResolver.insert(ChatProvider.CONTENT_URI, values);
 	}
+	/**
+	 * 更新离线状态
+	 */
+	public void setStatusOffline() {
+		ContentValues values = new ContentValues();
+		values.put(RosterConstants.STATUS_MODE, StatusMode.offline.ordinal());
+		mContentResolver.update(RosterProvider.CONTENT_URI, values, null, null);
+	}
+	/**
+	 * 修改信息发送状态
+	 * @param packetID
+	 * @param new_status
+	 */
+	public void changeMessageDeliveryStatus(String packetID, int new_status) {
+		ContentValues cv = new ContentValues();
+		cv.put(ChatConstants.DELIVERY_STATUS, new_status);
+		Uri rowuri = Uri.parse("content://" + ChatProvider.AUTHORITY + "/" + ChatProvider.TABLE_NAME);
+		String where = ChatConstants.PACKET_ID + " = ? AND " + ChatConstants.DIRECTION + " = " + ChatConstants.OUTGOING;
+		mContentResolver.update(rowuri, cv, where, new String[] { packetID });
+	}
+	/**
+	 * 初始化测试数据
+	 */
 	public void initDebugData() {
 		mContentResolver.delete(RosterProvider.CONTENT_URI, null, null);
 		int i = 0;
