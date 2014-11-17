@@ -7,7 +7,8 @@
         android:id="@+id/arrow_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/arrow_up" />
+        android:src="@drawable/arrow_up" 
+        android:contentDescription="@string/app_name"/>
 
     <ScrollView
         android:id="@+id/scroller"
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/scroller"
         android:layout_marginTop="-4dip"
-        android:src="@drawable/arrow_down" />
+        android:src="@drawable/arrow_down" 
+        android:contentDescription="@string/app_name"/>
 
 </RelativeLayout>

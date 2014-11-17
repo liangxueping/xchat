@@ -12,8 +12,8 @@ public class PreferenceUtil {
 	
 	public static final String APP_VERSION = "app_version";
 	
-
 	public static final String HOST_SERVER = "106.120.91.86";
+	public static final String HOST_DOMAIN = "das237test";
 	public static final int HOST_PORT = 5222;
 	public static final String HOST_RESSOURCE = "X-CHAT 1.0";
 

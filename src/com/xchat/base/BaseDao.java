@@ -20,7 +20,10 @@ public class BaseDao {
 	public ContentResolver mContentResolver;
 	
 	public BaseDao(){
-		
+		IS_DEBUG = false;
+		if(IS_DEBUG){
+			initDebugData();
+		}
 	}
 	/**
 	 * 消息记录存入数据库

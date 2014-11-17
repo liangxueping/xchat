@@ -103,7 +103,6 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 		mView = inflater.inflate(R.layout.friends_layout, container, false);
 		mContext = mView.getContext();
 		initViews(inflater);
-		registerListAdapter();
 		return mView;
 	}
 	
@@ -155,6 +154,7 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 		mIphoneTreeView = (IphoneTreeView) mView.findViewById(R.id.iphone_tree_view);
 		mIphoneTreeView.setHeaderView(inflater.inflate(R.layout.contact_buddy_list_group, mIphoneTreeView, false));
 		mIphoneTreeView.setEmptyView(mView.findViewById(R.id.empty));
+		
 		mIphoneTreeView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -188,13 +188,12 @@ public class FriendsFragment extends Fragment implements OnClickListener, IConne
 				return false;
 			}
 		});
-		updateTitle();
-	}
-
-	private void registerListAdapter() {
+		
 		mRosterAdapter = new RosterAdapter(mContext, mIphoneTreeView, mPullRefreshScrollView);
 		mIphoneTreeView.setAdapter(mRosterAdapter);
 		mRosterAdapter.requery();
+		
+		updateTitle();
 	}
 
 	private void showGroupQuickActionBar(View view) {

@@ -95,12 +95,12 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 	@Override
 	protected void onPause() {
 		super.onPause();
-		unbindXMPPService();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		unbindXMPPService();
 	}
 
 	private void unbindXMPPService() {

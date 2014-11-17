@@ -75,7 +75,8 @@ public class RecentChatAdapter extends SimpleCursorAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher + (int) dateMilliseconds);
 		}
-		viewHolder.jidView.setText(jid);
+		String userName = MyUtil.getUserNameByID(mContentResolver, jid);
+		viewHolder.jidView.setText(userName);
 		viewHolder.msgView.setText(MyUtil.convertNormalStringToSpannableString(mContext, message, true));
 		viewHolder.dataView.setText(date);
 

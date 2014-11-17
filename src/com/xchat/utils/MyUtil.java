@@ -6,7 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -16,6 +18,8 @@ import android.text.style.ImageSpan;
 import android.util.TypedValue;
 
 import com.xchat.base.BaseApp;
+import com.xchat.db.RosterProvider;
+import com.xchat.db.RosterProvider.RosterConstants;
 
 @SuppressLint("SimpleDateFormat")
 public class MyUtil {
@@ -149,5 +153,18 @@ public class MyUtil {
 		}
 
 		return result;
+	}
+	
+	public static String getUserNameByID(ContentResolver contentResolver, String id){
+		String userName = id;
+		Cursor rosterCursor = contentResolver.query(RosterProvider.CONTENT_URI,
+				null, 
+				RosterConstants.JID + "='"+id+"'",
+				null, 
+				null);
+		if(rosterCursor.moveToFirst()){
+			userName = rosterCursor.getString(rosterCursor.getColumnIndex(RosterConstants.ALIAS));
+		}
+		return userName;
 	}
 }

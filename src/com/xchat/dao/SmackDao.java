@@ -27,10 +27,12 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.carbons.Carbon;
 import org.jivesoftware.smackx.carbons.CarbonManager;
+import org.jivesoftware.smackx.filetransfer.FileTransfer.Status;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
+import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.jivesoftware.smackx.packet.DelayInfo;
 import org.jivesoftware.smackx.packet.DelayInformation;
 import org.jivesoftware.smackx.ping.PingManager;
@@ -57,7 +59,6 @@ import com.xchat.db.ChatProvider.ChatConstants;
 import com.xchat.db.RosterProvider;
 import com.xchat.db.RosterProvider.RosterConstants;
 import com.xchat.service.XChatService;
-import com.xchat.system.L;
 import com.xchat.utils.PreferenceUtil;
 import com.xchat.utils.StatusMode;
 
@@ -90,19 +91,15 @@ public class SmackDao extends BaseDao implements IXChatDao {
 	private PongTimeoutAlarmReceiver mPongTimeoutAlarmReceiver = new PongTimeoutAlarmReceiver();
 	private BroadcastReceiver mPingAlarmReceiver = new PingAlarmReceiver();
 	private String mPingID;
-	private long mPingTimestamp;
+	private String toUser;
+	private String sendFilePath;
 	
 	
 	public SmackDao(XChatService service) {
-		IS_DEBUG = false;
 		this.xChatService = service;
 		mContentResolver = service.getContentResolver();
-		
 		boolean requireSsl = PreferenceUtil.getPrefBoolean(PreferenceUtil.SETTING_USE_TLS, false);
-		
-		if(IS_DEBUG){
-			initDebugData();
-		}else {
+		if(!IS_DEBUG){
 			this.mXMPPConfig = new ConnectionConfiguration(PreferenceUtil.HOST_SERVER, PreferenceUtil.HOST_PORT);
 			this.mXMPPConfig.setReconnectionAllowed(false);
 			this.mXMPPConfig.setSendPresence(false);
@@ -230,6 +227,43 @@ public class SmackDao extends BaseDao implements IXChatDao {
 		}
 	}
 	@Override
+	public void sendFile(String user, String filePath) {
+		if (mXMPPConnection == null){
+			return;  
+		}
+		toUser = user;
+		sendFilePath = filePath;
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					FileTransferManager manager = new FileTransferManager(mXMPPConnection);
+					// 发送文件
+					File file = new File(sendFilePath);
+					// 创建输出的文件传输  
+					//wangjiawei@liang-pc/Spark 2.6.3
+					OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(toUser + "/Spark 2.6.3");
+					transfer.sendFile(file, "You won't believe this!");
+					addChatMessageToDB(ChatConstants.OUTGOING, toUser, "发送文件："+file.getName(), ChatConstants.DS_SENT_OR_READ, System.currentTimeMillis(), "");
+					xChatService.newMessage(toUser, "发送文件："+file.getName());
+					
+					while(!transfer.isDone()) {
+						if(transfer.getStatus().equals(Status.error)) {
+							System.out.println("ERROR!!! " + transfer.getError());
+						}else {
+							System.out.println(transfer.getStatus());
+							System.out.println(transfer.getProgress());
+						}
+						sleep(1000);
+					}
+				} catch (Exception e) {  
+					e.printStackTrace();  
+				}  
+			}
+
+		}.start();
+	}
+	@Override
 	public String getNameByID(String id) {
 		if (null != this.mRoster.getEntry(id)
 				&& null != this.mRoster.getEntry(id).getName()
@@ -239,7 +273,79 @@ public class SmackDao extends BaseDao implements IXChatDao {
 			return id;
 		}
 	}
+	@Override
+	public boolean addRosterItem(String user, String alias, String group) {
+		mRoster = mXMPPConnection.getRoster();
+		user = user + "@" + PreferenceUtil.HOST_DOMAIN;
+		try {
+			mRoster.createEntry(user, alias, new String[] { group });
+		} catch (XMPPException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	@Override
+	public boolean removeRosterItem(String account) {
+		mRoster = mXMPPConnection.getRoster();
+		try {
+			RosterEntry rosterEntry = mRoster.getEntry(account);
+			if (rosterEntry != null) {
+				mRoster.removeEntry(rosterEntry);
+			}
+		} catch (XMPPException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	@Override
+	public boolean moveRosterItemToGroup(String userName, String groupName) {
+		mRoster = mXMPPConnection.getRoster();
+		RosterGroup rosterGroup = mRoster.getGroup(groupName);
+		if ((groupName.length() > 0) && rosterGroup == null) {
+			rosterGroup = mRoster.createGroup(groupName);
+		}
+		RosterEntry rosterEntry = mRoster.getEntry(userName);
 
+		try {
+			Collection<RosterGroup> oldGroups = rosterEntry.getGroups();
+			for (RosterGroup group : oldGroups) {
+				group.removeEntry(rosterEntry);
+			}
+	
+			if(groupName.length() == 0){
+				return false;
+			}else {
+				rosterGroup.addEntry(rosterEntry);
+			}
+		} catch (XMPPException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	};
+	@Override
+	public boolean renameRosterItem(String user, String newName) {
+		mRoster = mXMPPConnection.getRoster();
+		RosterEntry rosterEntry = mRoster.getEntry(user);
+
+		if (!(newName.length() > 0) || (rosterEntry == null)) {
+			return false;
+		}
+		rosterEntry.setName(newName);
+		return true;
+	}
+	@Override
+	public boolean renameRosterGroup(String group, String newGroup) {
+		mRoster = mXMPPConnection.getRoster();
+		RosterGroup groupToRename = mRoster.getGroup(group);
+		if (groupToRename == null){
+			return false;
+		}
+		groupToRename.setName(newGroup);
+		return true;
+	}
 	private void sendServerPing() {
 		if (mPingID != null) {
 			return; // a ping is still on its way
@@ -248,7 +354,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 		ping.setType(Type.GET);
 		ping.setTo(PreferenceUtil.HOST_SERVER);
 		mPingID = ping.getPacketID();
-		mPingTimestamp = System.currentTimeMillis();
 		mXMPPConnection.sendPacket(ping);
 
 		// register ping timeout handler: PACKET_TIMEOUT(30s) + 3s
@@ -268,13 +373,10 @@ public class SmackDao extends BaseDao implements IXChatDao {
 
 	private void addRosterEntryToDB(final RosterEntry entry) {
 		ContentValues values = getContentValuesForRosterEntry(entry);
-		Uri uri = mContentResolver.insert(RosterProvider.CONTENT_URI, values);
-		L.i("addRosterEntryToDB: Inserted " + uri);
+		mContentResolver.insert(RosterProvider.CONTENT_URI, values);
 	}
 	private void deleteRosterEntryFromDB(final String jabberID) {
-		int count = mContentResolver.delete(RosterProvider.CONTENT_URI,
-				RosterConstants.JID + " = ?", new String[] { jabberID });
-		L.i("deleteRosterEntryFromDB: Deleted " + count + " entries");
+		mContentResolver.delete(RosterProvider.CONTENT_URI, RosterConstants.JID + " = ?", new String[] { jabberID });
 	}
 	private ContentValues getContentValuesForRosterEntry(final RosterEntry entry) {
 		final ContentValues values = new ContentValues();
@@ -327,7 +429,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 
 			@Override
 			public void presenceChanged(Presence presence) {
-				L.i("presenceChanged(" + presence.getFrom() + "): " + presence);
 				String jabberID = getJabberID(presence.getFrom());
 				RosterEntry rosterEntry = mRoster.getEntry(jabberID);
 				updateRosterEntryInDB(rosterEntry);
@@ -336,8 +437,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 
 			@Override
 			public void entriesUpdated(Collection<String> entries) {
-				// TODO Auto-generated method stub
-				L.i("entriesUpdated(" + entries + ")");
 				for (String entry : entries) {
 					RosterEntry rosterEntry = mRoster.getEntry(entry);
 					updateRosterEntryInDB(rosterEntry);
@@ -347,7 +446,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 
 			@Override
 			public void entriesDeleted(Collection<String> entries) {
-				L.i("entriesDeleted(" + entries + ")");
 				for (String entry : entries) {
 					deleteRosterEntryFromDB(entry);
 				}
@@ -356,7 +454,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 
 			@Override
 			public void entriesAdded(Collection<String> entries) {
-				L.i("entriesAdded(" + entries + ")");
 				ContentValues[] cvs = new ContentValues[entries.size()];
 				int i = 0;
 				for (String entry : entries) {
@@ -440,7 +537,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 	    			File file = new File(path + "/" + request.getFileName());
 	    			try {
 	    				accept.recieveFile(file);
-	    				L.i("接收文件 path：" + file.getPath());
 	    				String fromID = request.getRequestor();
 						String user = getJabberID(fromID);
 
@@ -451,7 +547,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 	    			}
 				}else {
 					request.reject();
-    				L.i("拒绝文件");
 				}
 			}
 		});
@@ -478,12 +573,10 @@ public class SmackDao extends BaseDao implements IXChatDao {
 						// try to extract a carbon
 						Carbon cc = CarbonManager.getCarbon(msg);
 						if (cc != null && cc.getDirection() == Carbon.Direction.received) {
-							L.d("carbon: " + cc.toXML());
 							msg = (Message) cc.getForwarded().getForwardedPacket();
 							chatMessage = msg.getBody();
 							// fall through
 						} else if (cc != null && cc.getDirection() == Carbon.Direction.sent) {
-							L.d("carbon: " + cc.toXML());
 							msg = (Message) cc.getForwarded().getForwardedPacket();
 							chatMessage = msg.getBody();
 							if (chatMessage == null)
@@ -518,9 +611,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 						xChatService.newMessage(fromJID, chatMessage);
 					}
 				} catch (Exception e) {
-					// SMACK silently discards exceptions dropped from
-					// processPacket :(
-					L.e("failed to process packet:");
 					e.printStackTrace();
 				}
 			}
@@ -546,9 +636,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 						changeMessageDeliveryStatus(msg.getPacketID(), ChatConstants.DS_NEW);
 					}
 				} catch (Exception e) {
-					// SMACK silently discards exceptions dropped from
-					// processPacket :(
-					L.e("failed to process packet:");
 					e.printStackTrace();
 				}
 			}
@@ -575,9 +662,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 					return;
 
 				if (packet.getPacketID().equals(mPingID)) {
-					L.i(String.format(
-							"Ping: server latency %1.3fs",
-							(System.currentTimeMillis() - mPingTimestamp) / 1000.));
 					mPingID = null;
 					((AlarmManager) xChatService
 							.getSystemService(Context.ALARM_SERVICE))
@@ -618,7 +702,6 @@ public class SmackDao extends BaseDao implements IXChatDao {
 				String message = cursor.getString(MSG_COL);
 				String packetID = cursor.getString(PACKETID_COL);
 				long ts = cursor.getLong(TS_COL);
-				L.d("sendOfflineMessages: " + toJID + " > " + message);
 				final Message newMessage = new Message(toJID, Message.Type.chat);
 				newMessage.setBody(message);
 				DelayInformation delay = new DelayInformation(new Date(ts));

@@ -27,10 +27,11 @@ import com.xchat.base.BaseActivity.BackPressHandler;
 import com.xchat.base.BaseService;
 import com.xchat.broadcast.XChatBroadcastReceiver;
 import com.xchat.broadcast.XChatBroadcastReceiver.EventHandler;
+import com.xchat.dao.AndroidpnDao;
 import com.xchat.dao.IXChatDao;
-import com.xchat.dao.SmackDao;
 import com.xchat.db.ChatProvider;
 import com.xchat.db.ChatProvider.ChatConstants;
+import com.xchat.system.T;
 import com.xchat.utils.NetUtil;
 import com.xchat.utils.PreferenceUtil;
 
@@ -357,7 +358,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 		mConnectingThread = new Thread() {
 			@Override
 			public void run() {
-				xChatDao = new SmackDao(XChatService.this);
+				xChatDao = new AndroidpnDao(XChatService.this);
 				if (xChatDao.login(account, password)) {
 					//登陆成功
 					mMainHandler.post(new Runnable() {
@@ -407,12 +408,10 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 * @param group
 	 */
 	public void addRosterItem(String user, String alias, String group) {
-//		try {
-//			xChatDao.addRosterItem(user, alias, group);
-//		} catch (XChatException e) {
-//			T.showShort(this, e.getMessage());
-//			L.e("exception in addRosterItem(): " + e.getMessage());
-//		}
+		boolean reslut = xChatDao.addRosterItem(user, alias, group);
+		if(!reslut){
+			T.showShort(this, "添加失败");
+		}
 	}
 
 	/**
@@ -420,12 +419,10 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 * @param user
 	 */
 	public void removeRosterItem(String user) {
-//		try {
-//			xChatDao.removeRosterItem(user);
-//		} catch (XChatException e) {
-//			T.showShort(this, e.getMessage());
-//			L.e("exception in removeRosterItem(): " + e.getMessage());
-//		}
+		boolean reslut = xChatDao.removeRosterItem(user);
+		if(!reslut){
+			T.showShort(this, "删除失败");
+		}
 	}
 
 	/**
@@ -434,12 +431,10 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 * @param group
 	 */
 	public void moveRosterItemToGroup(String user, String group) {
-//		try {
-//			xChatDao.moveRosterItemToGroup(user, group);
-//		} catch (XChatException e) {
-//			T.showShort(this, e.getMessage());
-//			L.e("exception in moveRosterItemToGroup(): " + e.getMessage());
-//		}
+		boolean reslut = xChatDao.moveRosterItemToGroup(user, group);
+		if(!reslut){
+			T.showShort(this, "移动失败");
+		}
 	}
 
 	/**
@@ -448,12 +443,10 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 * @param newName
 	 */
 	public void renameRosterItem(String user, String newName) {
-//		try {
-//			xChatDao.renameRosterItem(user, newName);
-//		} catch (XChatException e) {
-//			T.showShort(this, e.getMessage());
-//			L.e("exception in renameRosterItem(): " + e.getMessage());
-//		}
+		boolean reslut = xChatDao.renameRosterItem(user, newName);
+		if(!reslut){
+			T.showShort(this, "修改失败");
+		}
 	}
 
 	/**
@@ -462,7 +455,10 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 * @param newGroup
 	 */
 	public void renameRosterGroup(String group, String newGroup) {
-//		xChatDao.renameRosterGroup(group, newGroup);
+		boolean reslut = xChatDao.renameRosterGroup(group, newGroup);
+		if(!reslut){
+			T.showShort(this, "修改失败");
+		}
 	}
 
 	/**
@@ -497,9 +493,9 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 	 * @param filePaht
 	 */
 	public void sendFile(String user, String filePaht) {
-//		if (xChatDao != null){
-//			xChatDao.sendFile(user, filePaht);
-//		}
+		if (xChatDao != null){
+			xChatDao.sendFile(user, filePaht);
+		}
 	}
 	/**
 	 * 收到新消息

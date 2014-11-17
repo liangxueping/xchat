@@ -21,7 +21,6 @@ import com.other.pulltorefresh.PullToRefreshScrollView;
 import com.xchat.activity.R;
 import com.xchat.db.RosterProvider;
 import com.xchat.db.RosterProvider.RosterConstants;
-import com.xchat.system.L;
 import com.xchat.utils.PreferenceUtil;
 import com.xchat.utils.StatusMode;
 import com.xchat.view.IphoneTreeView;
@@ -94,7 +93,6 @@ public class RosterAdapter extends BaseExpandableListAdapter implements IphoneTr
 			groupCursor.moveToNext();
 		}
 		groupCursor.close();
-		L.i("cursor size = " + mGroupList.size());
 		notifyDataSetChanged();
 	}
 
@@ -202,7 +200,6 @@ public class RosterAdapter extends BaseExpandableListAdapter implements IphoneTr
 		ViewHolder holder;
 		if (convertView == null
 				|| convertView.getTag(R.drawable.ic_launcher + presenceMode) == null) {
-			L.i("liweiping", "new  child ");
 			holder = new ViewHolder();
 			convertView = mInflater.inflate(
 					R.layout.contact_list_item_for_buddy, parent, false);
@@ -219,7 +216,6 @@ public class RosterAdapter extends BaseExpandableListAdapter implements IphoneTr
 			convertView.setTag(R.string.app_name, R.drawable.ic_launcher
 					+ presenceMode);
 		} else {
-			L.i("liweiping", "get child form case");
 			holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher
 					+ presenceMode);
 		}
@@ -281,8 +277,6 @@ public class RosterAdapter extends BaseExpandableListAdapter implements IphoneTr
 			mPullToRefreshScrollView.setMode(Mode.PULL_FROM_START);
 			return PINNED_HEADER_GONE;
 		} else {
-			L.i("liweiping", "groupPosition = " + groupPosition
-					+ ", childPosition = " + childPosition);
 			// 第一组第一个,可以下拉刷新
 			if (groupPosition == 0 && childPosition == -1) {
 				mPullToRefreshScrollView.setMode(Mode.PULL_FROM_START);

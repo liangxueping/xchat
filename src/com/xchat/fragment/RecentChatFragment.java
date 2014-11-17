@@ -28,6 +28,7 @@ import com.xchat.db.ChatProvider;
 import com.xchat.db.ChatProvider.ChatConstants;
 import com.xchat.service.XChatService;
 import com.xchat.system.L;
+import com.xchat.utils.MyUtil;
 import com.xchat.view.AddRosterItemDialog;
 import com.xchat.view.CustomDialog;
 
@@ -156,22 +157,21 @@ public class RecentChatFragment extends Fragment implements OnClickListener, OnI
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		Cursor clickCursor = mRecentChatAdapter.getCursor();
 		clickCursor.moveToPosition(position);
-		final String JID = clickCursor.getString(clickCursor.getColumnIndex(ChatConstants.JID));
-//		String userName = clickCursor.getString(clickCursor.getColumnIndex(XMPPHelper.splitJidAndServer(JID)));
+		final String jid = clickCursor.getString(clickCursor.getColumnIndex(ChatConstants.JID));
+		String userName = MyUtil.getUserNameByID(mFragmentCallBack.getMainActivity().getContentResolver(), jid);
 		new CustomDialog.Builder(getActivity())
 				.setTitle(R.string.deleteChatHistory_title)
 				.setMessage(
 						getActivity().getString(R.string.deleteChatHistory_text,
-								JID, JID))
+								userName, jid))
 				.setPositiveButton(android.R.string.yes,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								removeChatHistory(JID);
+								removeChatHistory(jid);
 							}
 						})
 				.setNegativeButton(android.R.string.no,
@@ -195,7 +195,8 @@ public class RecentChatFragment extends Fragment implements OnClickListener, OnI
 		Uri userNameUri = Uri.parse(jid);
 		Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
 		toChatIntent.setData(userNameUri);
-		toChatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, jid);
+		String userName = MyUtil.getUserNameByID(mFragmentCallBack.getMainActivity().getContentResolver(), jid);
+		toChatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, userName);
 		startActivity(toChatIntent);
 	}
 }
