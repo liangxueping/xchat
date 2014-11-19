@@ -18,9 +18,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.other.swipelistview.BaseSwipeListViewListener;
+import com.other.swipelistview.SwipeListView;
 import com.xchat.activity.ChatActivity;
 import com.xchat.activity.R;
 import com.xchat.adapter.RecentChatAdapter;
@@ -37,7 +38,7 @@ public class RecentChatFragment extends Fragment implements OnClickListener, OnI
 	private Handler mainHandler = new Handler();
 	private ContentObserver mChatObserver = new ChatObserver();
 	private ContentResolver mContentResolver;
-	private ListView mSwipeListView;
+	private SwipeListView mSwipeListView;
 	private RecentChatAdapter mRecentChatAdapter;
 	private TextView mTitleView;
 	private ImageView mTitleAddView;
@@ -92,12 +93,16 @@ public class RecentChatFragment extends Fragment implements OnClickListener, OnI
 		mTitleAddView.setImageResource(R.drawable.setting_add_account_white);
 		mTitleAddView.setVisibility(View.VISIBLE);
 		mTitleAddView.setOnClickListener(this);
-		mSwipeListView = (ListView) view.findViewById(R.id.recent_listview);
+//		mSwipeListView = (SwipeListView) view.findViewById(R.id.recent_listview);
+//		mSwipeListView.setEmptyView(view.findViewById(R.id.recent_empty));
+//		mSwipeListView.setAdapter(mRecentChatAdapter);
+//		mSwipeListView.setOnItemClickListener(this);
+//		mSwipeListView.setOnItemLongClickListener(this);
+		
+		mSwipeListView = (SwipeListView) view.findViewById(R.id.recent_listview);
 		mSwipeListView.setEmptyView(view.findViewById(R.id.recent_empty));
 		mSwipeListView.setAdapter(mRecentChatAdapter);
-//		mSwipeListView.setSwipeListViewListener(mSwipeListViewListener);
-		mSwipeListView.setOnItemClickListener(this);
-		mSwipeListView.setOnItemLongClickListener(this);
+		mSwipeListView.setSwipeListViewListener(mSwipeListViewListener);
 
 	}
 
@@ -115,25 +120,6 @@ public class RecentChatFragment extends Fragment implements OnClickListener, OnI
 			L.i("liweiping", "selfChange" + selfChange);
 		}
 	}
-
-//	BaseSwipeListViewListener mSwipeListViewListener = new BaseSwipeListViewListener() {
-//		@Override
-//		public void onClickFrontView(int position) {
-//			Cursor clickCursor = mRecentChatAdapter.getCursor();
-//			clickCursor.moveToPosition(position);
-//			String jid = clickCursor.getString(clickCursor.getColumnIndex(ChatConstants.JID));
-//			Uri userNameUri = Uri.parse(jid);
-//			Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
-//			toChatIntent.setData(userNameUri);
-//			toChatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, jid);
-//			startActivity(toChatIntent);
-//		}
-//
-//		@Override
-//		public void onClickBackView(int position) {
-//			mSwipeListView.closeOpenedItems();// 关闭打开的项
-//		}
-//	};
 
 	@Override
 	public void onClick(View v) {
@@ -199,4 +185,25 @@ public class RecentChatFragment extends Fragment implements OnClickListener, OnI
 		toChatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, userName);
 		startActivity(toChatIntent);
 	}
+	
+	BaseSwipeListViewListener mSwipeListViewListener = new BaseSwipeListViewListener() {
+		@Override
+		public void onClickFrontView(int position) {
+			
+			Cursor clickCursor = mRecentChatAdapter.getCursor();
+			clickCursor.moveToPosition(position);
+			String jid = clickCursor.getString(clickCursor.getColumnIndex(ChatConstants.JID));
+			Uri userNameUri = Uri.parse(jid);
+			Intent toChatIntent = new Intent(getActivity(), ChatActivity.class);
+			toChatIntent.setData(userNameUri);
+			String userName = MyUtil.getUserNameByID(mFragmentCallBack.getMainActivity().getContentResolver(), jid);
+			toChatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, userName);
+			startActivity(toChatIntent);
+		}
+
+		@Override
+		public void onClickBackView(int position) {
+			mSwipeListView.closeOpenedItems();// 关闭打开的项
+		}
+	};
 }

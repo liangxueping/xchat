@@ -2,10 +2,13 @@ package com.xchat.adapter;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -13,6 +16,7 @@ import com.xchat.activity.R;
 import com.xchat.db.ChatProvider;
 import com.xchat.db.ChatProvider.ChatConstants;
 import com.xchat.utils.MyUtil;
+import com.xchat.view.CustomDialog;
 
 public class RecentChatAdapter extends SimpleCursorAdapter {
 	private static final String SELECT = ChatConstants.DATE
@@ -54,7 +58,8 @@ public class RecentChatAdapter extends SimpleCursorAdapter {
 		String date = MyUtil.getChatTime(dateMilliseconds);
 		String message = cursor.getString(cursor
 				.getColumnIndex(ChatProvider.ChatConstants.MESSAGE));
-		String jid = cursor.getString(cursor.getColumnIndex(ChatProvider.ChatConstants.JID));
+		String jid = cursor.getString(cursor
+				.getColumnIndex(ChatProvider.ChatConstants.JID));
 
 		String selection = ChatConstants.JID + " = '" + jid + "' AND "
 				+ ChatConstants.DIRECTION + " = " + ChatConstants.INCOMING
@@ -66,16 +71,16 @@ public class RecentChatAdapter extends SimpleCursorAdapter {
 				null, SORT_ORDER);
 		msgcursor.moveToFirst();
 		int count = msgcursor.getInt(0);
+		String userName = MyUtil.getUserNameByID(mContentResolver, jid);
 		ViewHolder viewHolder;
 		if (convertView == null || convertView.getTag(R.drawable.ic_launcher + (int) dateMilliseconds) == null) {
 			convertView = mLayoutInflater.inflate(R.layout.recent_listview_item, parent, false);
-			viewHolder = buildHolder(convertView, jid);
+			viewHolder = buildHolder(convertView, jid, userName);
 			convertView.setTag(R.drawable.ic_launcher + (int) dateMilliseconds, viewHolder);
 			convertView.setTag(R.string.app_name, R.drawable.ic_launcher + (int) dateMilliseconds);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher + (int) dateMilliseconds);
 		}
-		String userName = MyUtil.getUserNameByID(mContentResolver, jid);
 		viewHolder.jidView.setText(userName);
 		viewHolder.msgView.setText(MyUtil.convertNormalStringToSpannableString(mContext, message, true));
 		viewHolder.dataView.setText(date);
@@ -95,7 +100,7 @@ public class RecentChatAdapter extends SimpleCursorAdapter {
 		return convertView;
 	}
 
-	private ViewHolder buildHolder(View convertView, final String jid) {
+	private ViewHolder buildHolder(View convertView, final String jid, final String userName) {
 		ViewHolder holder = new ViewHolder();
 		holder.jidView = (TextView) convertView
 				.findViewById(R.id.recent_list_item_name);
@@ -104,6 +109,15 @@ public class RecentChatAdapter extends SimpleCursorAdapter {
 		holder.msgView = (TextView) convertView
 				.findViewById(R.id.recent_list_item_msg);
 		holder.unReadView = (TextView) convertView.findViewById(R.id.unreadmsg);
+		holder.deleteBtn = (Button) convertView
+				.findViewById(R.id.recent_del_btn);
+		holder.deleteBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				removeChatHistoryDialog(jid, userName);
+			}
+		});
 		return holder;
 	}
 
@@ -112,6 +126,35 @@ public class RecentChatAdapter extends SimpleCursorAdapter {
 		TextView dataView;
 		TextView msgView;
 		TextView unReadView;
-//		Button deleteBtn;
+		Button deleteBtn;
+	}
+
+	void removeChatHistory(final String JID) {
+		mContentResolver.delete(ChatProvider.CONTENT_URI,
+				ChatProvider.ChatConstants.JID + " = ?", new String[] { JID });
+	}
+
+	void removeChatHistoryDialog(final String JID, final String userName) {
+		new CustomDialog.Builder(mContext)
+				.setTitle(R.string.deleteChatHistory_title)
+				.setMessage(
+						mContext.getString(R.string.deleteChatHistory_text,
+								userName, JID))
+				.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								removeChatHistory(JID);
+							}
+						})
+				.setNegativeButton(android.R.string.no,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+
+							}
+						}).create().show();
 	}
 }

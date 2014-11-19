@@ -38,7 +38,8 @@
                     android:id="@+id/tabRecentChat"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:background="@drawable/btn_home_tab_recentchat" />
+                    android:background="@drawable/btn_home_tab_recentchat" 
+                    android:contentDescription="@string/app_name"/>
             </LinearLayout>
 
             <LinearLayout
@@ -53,7 +54,8 @@
                     android:id="@+id/tabFriendsFragment"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:background="@drawable/btn_home_tab_friends" />
+                    android:background="@drawable/btn_home_tab_friends" 
+                    android:contentDescription="@string/app_name"/>
             </LinearLayout>
 
             <LinearLayout
@@ -68,7 +70,8 @@
                     android:id="@+id/tabFragment3"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:background="@drawable/btn_home_tab_3" />
+                    android:background="@drawable/btn_home_tab_3" 
+                    android:contentDescription="@string/app_name"/>
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +86,8 @@
                     android:id="@+id/tabSettingsFragment"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:background="@drawable/btn_home_tab_settings" />
+                    android:background="@drawable/btn_home_tab_settings" 
+                    android:contentDescription="@string/app_name"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -94,7 +98,7 @@
         android:layout_above="@+id/tabLayout"
         android:orientation="vertical" >
 
-        <android.support.v4.view.ViewPager
+        <com.xchat.view.TouchViewPager
             android:id="@+id/pager"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"

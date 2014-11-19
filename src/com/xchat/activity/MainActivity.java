@@ -10,7 +10,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,18 +17,19 @@ import android.view.View.OnClickListener;
 import com.xchat.adapter.MyFragmentPagerAdapter;
 import com.xchat.base.BaseActivity;
 import com.xchat.fragment.Fragment3;
-import com.xchat.fragment.SettingsFragment;
 import com.xchat.fragment.FriendsFragment;
 import com.xchat.fragment.IFragmentCallBack;
 import com.xchat.fragment.RecentChatFragment;
+import com.xchat.fragment.SettingsFragment;
 import com.xchat.service.XChatService;
 import com.xchat.system.T;
 import com.xchat.utils.PreferenceUtil;
+import com.xchat.view.TouchViewPager;
 
 public class MainActivity extends BaseActivity implements OnClickListener,OnPageChangeListener,IFragmentCallBack{
 
 	private XChatService xChatService;
-	private ViewPager pager;
+	private TouchViewPager pager;
 	private List<String> titleList;
 	private List<Fragment> fragList;
 	public RecentChatFragment recentChatFragment;
@@ -123,8 +123,7 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 		tabFragment3.setOnClickListener(this);
 		tabRecentChat.setOnClickListener(this);
 		tabSettingsFragment.setOnClickListener(this);
-		pager = (ViewPager) findViewById(R.id.pager);
-
+		pager = (TouchViewPager) findViewById(R.id.pager);
 		titleList = new ArrayList<String>();
 		titleList.add("第一页");
 		titleList.add("第二页");
@@ -143,7 +142,9 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 		fragList.add(settingsFragment);
 		// 可以控制页面自动消亡
 		MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragList, titleList);
-
+		
+		//设置滑动事件不触发
+		//pager.setViewTouchMode(true);
 		pager.setAdapter(adapter);
 		// 设置当前页面
 		pager.setCurrentItem(1);

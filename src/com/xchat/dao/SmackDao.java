@@ -242,7 +242,7 @@ public class SmackDao extends BaseDao implements IXChatDao {
 					File file = new File(sendFilePath);
 					// 创建输出的文件传输  
 					//wangjiawei@liang-pc/Spark 2.6.3
-					OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(toUser + "/Spark 2.6.3");
+					OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(toUser + "/" + PreferenceUtil.HOST_RESSOURCE);
 					transfer.sendFile(file, "You won't believe this!");
 					addChatMessageToDB(ChatConstants.OUTGOING, toUser, "发送文件："+file.getName(), ChatConstants.DS_SENT_OR_READ, System.currentTimeMillis(), "");
 					xChatService.newMessage(toUser, "发送文件："+file.getName());

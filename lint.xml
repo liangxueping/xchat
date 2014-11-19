@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="DisableBaselineAlignment">
+        <ignore path="res/layout/activity_main.xml" />
+    </issue>
     <issue id="ExportedContentProvider">
         <ignore path="AndroidManifest.xml" />
     </issue>

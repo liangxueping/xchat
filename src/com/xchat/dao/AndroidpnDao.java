@@ -2,7 +2,6 @@ package com.xchat.dao;
 
 import java.util.UUID;
 
-import org.androidpn.client.Constants;
 import org.androidpn.client.NotificationIQ;
 import org.androidpn.client.NotificationIQProvider;
 import org.androidpn.client.NotificationPacketListener;
@@ -30,7 +29,6 @@ import org.jivesoftware.smackx.packet.DelayInfo;
 import org.jivesoftware.smackx.receipts.DeliveryReceiptRequest;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 
 import com.xchat.base.BaseDao;
 import com.xchat.db.ChatProvider.ChatConstants;
@@ -104,7 +102,7 @@ public class AndroidpnDao extends BaseDao implements IXChatDao {
         mXMPPConnection.addPacketListener(packetListener, packetFilter);
 
         registration.setType(IQ.Type.SET);
-        registration.addAttribute("username", newUsername);
+        registration.addAttribute("userName", newUsername);
         registration.addAttribute("password", newPassword);
         mXMPPConnection.sendPacket(registration);
 	}
@@ -268,7 +266,7 @@ public class AndroidpnDao extends BaseDao implements IXChatDao {
 		newMessage.addExtension(new DeliveryReceiptRequest());
 		if (isAuthenticated()) {
 			addChatMessageToDB(ChatConstants.OUTGOING, account, message, ChatConstants.DS_SENT_OR_READ, System.currentTimeMillis(), newMessage.getPacketID());
-//			mXMPPConnection.sendPacket(newMessage);
+			mXMPPConnection.sendPacket(newMessage);
 		} else {
 			addChatMessageToDB(ChatConstants.OUTGOING, account, message, ChatConstants.DS_NEW, System.currentTimeMillis(), newMessage.getPacketID());
 		}

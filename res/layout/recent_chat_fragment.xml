@@ -13,13 +13,28 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
+        <!-- 
         <ListView
             android:id="@+id/recent_listview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:divider="@null"
             android:listSelector="@color/black_8"/>
+         -->
+        <com.other.swipelistview.SwipeListView
+            xmlns:swipe="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/recent_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@null"
+            android:listSelector="@color/black_8"
+            swipe:swipeActionLeft="reveal"
+            swipe:swipeBackView="@+id/back"
+            swipe:swipeCloseAllItemsWhenMoveList="true"
+            swipe:swipeFrontView="@+id/front"
+            swipe:swipeMode="left"
+            swipe:swipeOffsetLeft="200dip"
+            swipe:swipeOpenOnLongPress="true" />
 
         <TextView
             android:id="@+id/recent_empty"

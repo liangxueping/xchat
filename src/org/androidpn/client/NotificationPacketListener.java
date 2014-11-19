@@ -68,8 +68,9 @@ public class NotificationPacketListener implements PacketListener {
                 //                        "notif://notification.androidpn.org/")).append(
                 //                        notificationApiKey).append("/").append(
                 //                        System.currentTimeMillis()).toString()));
-
-                //xmppManager.getContext().sendBroadcast(intent);
+                if(xmppManager != null){
+                	xmppManager.getContext().sendBroadcast(intent);
+                }
             }
         }
 
