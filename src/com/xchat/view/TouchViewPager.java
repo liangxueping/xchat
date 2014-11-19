@@ -1,16 +1,25 @@
 package com.xchat.view;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 public class TouchViewPager extends ViewPager {
 	// mViewTouchMode表示ViewPager是否全权控制滑动事件，默认为false，即不控制
 	private boolean mViewTouchMode = false;
+    private int windowsWidth;
+    private int padding = 20;
+	private float lastMotionX;
+    
 
 	public TouchViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		// 通过Resources获取
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		windowsWidth = dm.widthPixels;
 	}
 
 	public void setViewTouchMode(boolean b) {
@@ -29,9 +38,25 @@ public class TouchViewPager extends ViewPager {
 	 */
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		if (mViewTouchMode) {
-			return false;
-		}
+        int action = MotionEventCompat.getActionMasked(event);
+        switch (action) {
+	        case MotionEvent.ACTION_MOVE:
+	        	int MAX_X = windowsWidth - padding;
+	        	if ((MAX_X < lastMotionX || lastMotionX < padding) && mViewTouchMode) {
+	    			return false;
+	    		}
+	        	break;
+	        case MotionEvent.ACTION_DOWN:
+	        	lastMotionX = event.getX();
+	            break;
+	        case MotionEvent.ACTION_CANCEL:
+	            break;
+	        case MotionEvent.ACTION_UP:
+	        	lastMotionX = 0;
+	        	break;
+	        default:
+	            break;
+	    }
 		return super.onInterceptTouchEvent(event);
 	}
 	@Override

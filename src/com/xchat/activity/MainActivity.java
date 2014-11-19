@@ -215,10 +215,10 @@ public class MainActivity extends BaseActivity implements OnClickListener,OnPage
 		}
 		v.setSelected(true);
 		currSelectedTab = v;
-//		if(v == tabRecentChat){
-//			//设置滑动事件不触发
-//			pager.setViewTouchMode(true);
-//		}
+		if(v == tabRecentChat){
+			//设置滑动事件不触发
+			pager.setViewTouchMode(true);
+		}
 	}
 	public void updateRoster() {
 		friendsFragment.updateRoster();

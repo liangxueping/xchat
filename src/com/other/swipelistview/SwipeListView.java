@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
 import com.xchat.activity.R;
 
 /**
@@ -471,7 +472,7 @@ public class SwipeListView extends ListView {
         final float y = ev.getY();
 
         if (touchState == TOUCH_STATE_SCROLLING_X) {
-            return touchListener.onTouch(this, ev);
+            return touchListener.onTouch(this, ev);	
         }
 
         switch (action) {
@@ -493,7 +494,7 @@ public class SwipeListView extends ListView {
             default:
                 break;
         }
-
+        
         return super.onInterceptTouchEvent(ev);
     }
 
