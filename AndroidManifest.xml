@@ -16,6 +16,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     
     <application
         android:name="com.xchat.base.BaseApp"
@@ -69,6 +71,24 @@
             android:theme="@android:style/Theme.Light.NoTitleBar">
         </activity>
         
+        <!--推送服务-->  
+        <service  android:name="com.ksu.xchatandroidcore.XChatPushService"/>
+        <!--保持长连接广播-->  
+        <receiver  android:name="com.ksu.xchatandroidcore.KeepAliveReceiver"/>
+         <!--消息接受广播注册-->  
+        <receiver android:name="com.xchat.broadcast.CustomXChatMessageReceiver" android:exported="false">  
+            <intent-filter >
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>  <!-- 网络变化广播 -->
+                <action android:name="com.ksu.xchat.MESSAGE_RECEIVED"/><!-- 消息广播action -->
+                <action android:name="com.ksu.xchat.SENT_FAILED"/> <!-- 发送sendbody失败广播-->
+                <action android:name="com.ksu.xchat.SENT_SUCCESS"/> <!-- 发送sendbody成功广播 -->
+                <action android:name="com.ksu.xchat.CONNECTION_CLOSED"/> <!-- 链接意外关闭广播 -->
+                <action android:name="com.ksu.xchat.CONNECTION_FAILED"/> <!-- 链接失败广播 -->
+                <action android:name="com.ksu.xchat.CONNECTION_SUCCESS"/> <!-- 链接成功广播-->
+                <action android:name="com.ksu.xchat.REPLY_RECEIVED"/> <!-- 发送sendbody成功后获得replaybody回应广播 -->
+                <action android:name="com.ksu.xchat.CONNECTION_STATUS"/> <!-- 获取到与服务端连接状态广播 -->
+            </intent-filter>  
+        </receiver>
     </application>
 
 </manifest>

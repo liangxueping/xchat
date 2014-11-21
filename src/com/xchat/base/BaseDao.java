@@ -20,8 +20,9 @@ public class BaseDao {
 	public ContentResolver mContentResolver;
 	
 	public BaseDao(){
-		IS_DEBUG = false;
+		IS_DEBUG = true;
 		if(IS_DEBUG){
+			mContentResolver = BaseApp.getInstance().getContentResolver();
 			initDebugData();
 		}
 	}

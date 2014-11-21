@@ -28,7 +28,7 @@ import com.xchat.base.BaseService;
 import com.xchat.broadcast.XChatBroadcastReceiver;
 import com.xchat.broadcast.XChatBroadcastReceiver.EventHandler;
 import com.xchat.dao.IXChatDao;
-import com.xchat.dao.SmackDao;
+import com.xchat.dao.MinaDao;
 import com.xchat.db.ChatProvider;
 import com.xchat.db.ChatProvider.ChatConstants;
 import com.xchat.system.T;
@@ -358,7 +358,7 @@ public class XChatService extends BaseService implements EventHandler,BackPressH
 		mConnectingThread = new Thread() {
 			@Override
 			public void run() {
-				xChatDao = new SmackDao(XChatService.this);
+				xChatDao = new MinaDao(XChatService.this);
 				if (xChatDao.login(account, password)) {
 					//登陆成功
 					mMainHandler.post(new Runnable() {

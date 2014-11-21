@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,6 +22,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ksu.xchatcore.nio.common.RequestKey;
+import com.ksu.xchatcore.nio.common.ReturnCode;
+import com.ksu.xchatcore.nio.model.ReplyBody;
+import com.xchat.base.BaseActivity;
 import com.xchat.service.IConnectionStatusCallback;
 import com.xchat.service.XChatService;
 import com.xchat.system.T;
@@ -31,7 +34,7 @@ import com.xchat.utils.MyUtil;
 import com.xchat.utils.PreferenceUtil;
 
 @SuppressLint("HandlerLeak")
-public class LoginActivity extends FragmentActivity implements TextWatcher,IConnectionStatusCallback{
+public class LoginActivity extends BaseActivity implements TextWatcher,IConnectionStatusCallback{
 
 	public static final String LOGIN_ACTION = "com.xchat.action.LOGIN";
 	
@@ -200,7 +203,22 @@ public class LoginActivity extends FragmentActivity implements TextWatcher,IConn
 		}
 		
 	}
-	
+	@Override
+	public void onReplyReceived(final ReplyBody reply) {
+
+		if (reply.getKey().equals(RequestKey.CLIENT_BIND.getValue())) {
+
+			if (reply.getCode().equals(ReturnCode.CODE_200.getValue())) {
+				loginSuccess();
+			}
+		}
+
+	}
+	private void loginSuccess(){
+		save2Preferences();
+		startActivity(new Intent(this, MainActivity.class));
+		finish();
+	}
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		
@@ -289,9 +307,7 @@ public class LoginActivity extends FragmentActivity implements TextWatcher,IConn
 			mLoginOutTimeProcess = null;
 		}
 		if (connectedState == XChatService.CONNECTED) {
-			save2Preferences();
-			startActivity(new Intent(this, MainActivity.class));
-			finish();
+			loginSuccess();
 		} else if (connectedState == XChatService.DISCONNECTED){
 			T.showLong(LoginActivity.this, getString(R.string.tip_login_failed) + reason);
 		}
